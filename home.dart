@@ -1,0 +1,52 @@
+import 'package:flutter/material.dart';
+import 'pages/home_page.dart';
+import 'pages/profile_page.dart';
+import 'package:provider/provider.dart';
+
+import 'main.dart';
+import 'view_models/budget_view_model.dart';
+import 'services/theme_service.dart';
+
+class Home extends StatefulWidget {
+  const Home({Key? key}) : super(key: key);
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  List<BottomNavigationBarItem> bottomNavItems = const [
+    BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+    BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile')
+  ];
+
+  List<Widget> pages = const [HomePage(), ProfilePage()];
+
+  int _currentPageIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    final themeService = Provider.of<ThemeService>(context, listen: false);
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("OverPowered School"),
+        leading: IconButton(
+          onPressed: () {
+            themeService.darkTheme = !themeService.darkTheme;
+          },
+          icon: Icon(themeService.darkTheme ? Icons.sunny : Icons.dark_mode),
+        ),
+      ),
+      body: pages[_currentPageIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        items: bottomNavItems,
+        currentIndex: _currentPageIndex,
+        onTap: (index) {
+          setState(() {
+            _currentPageIndex = index;
+          });
+        },
+      ),
+    );
+  }
+}
