@@ -57,7 +57,19 @@ class LocalStorageService {
         .put("periods", availablePeriods);
   }
 
-  void deleteTransactionItem(TransactionItem transaction) {
+  Future<void> updateAvailablePeriodsAfterDelete(
+      List<List<int>> newlyAvailablePeriods) {
+    List<List<bool>> availablePeriods = getAvailablePeriods();
+
+    for (int i = 0; i < newlyAvailablePeriods.length; i++) {
+      List<int> period = newlyAvailablePeriods[i];
+      availablePeriods[period[0]][period[1]] = false;
+    }
+    return Hive.box<List<List<bool>>>(availablePeriodsBoxKey)
+        .put("periods", availablePeriods);
+  }
+
+  void deleteTransactionItem(TransactionItem classItem) {
     // Get a list of our transactions
     final transactions = Hive.box<TransactionItem>(transactionsBoxKey);
     // Create a map out of it
@@ -65,8 +77,10 @@ class LocalStorageService {
     dynamic desiredKey;
     // For each key in the map, we check if the transaction is the same as the one we want to delete
     map.forEach((key, value) {
-      if (value.itemTitle == transaction.itemTitle) desiredKey = key;
+      if (value.className == classItem.className) desiredKey = key;
     });
+
+    updateAvailablePeriodsAfterDelete(classItem.periodCodes);
     // If we found the key, we delete it
     transactions.delete(desiredKey);
   }

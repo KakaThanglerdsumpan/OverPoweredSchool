@@ -18,30 +18,36 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showModalBottomSheet(
+          showModalBottomSheet<dynamic>(
+            isScrollControlled: true,
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(40),
                     topRight: Radius.circular(40))),
             context: context,
             builder: (context) {
-              return Consumer<BudgetViewModel>(
-                builder: ((context, value, child) {
-                  return AddTransactionDialog(
-                    itemToAdd: (transactionItem) {
-                      final budgetService =
-                          Provider.of<BudgetViewModel>(context, listen: false);
+              return Container(
+                height: MediaQuery.of(context).size.height * 0.75,
+                child: Consumer<BudgetViewModel>(
+                  builder: ((context, value, child) {
+                    return AddTransactionDialog(
+                      itemToAdd: (transactionItem) {
+                        final budgetService = Provider.of<BudgetViewModel>(
+                            context,
+                            listen: false);
 
-                      budgetService.addItem(transactionItem);
-                    },
-                    periodsToUpdate: (periods) {
-                      final budgetService =
-                          Provider.of<BudgetViewModel>(context, listen: false);
+                        budgetService.addItem(transactionItem);
+                      },
+                      periodsToUpdate: (periods) {
+                        final budgetService = Provider.of<BudgetViewModel>(
+                            context,
+                            listen: false);
 
-                      budgetService.addSelectedPeriods(periods);
-                    },
-                  );
-                }),
+                        budgetService.addSelectedPeriods(periods);
+                      },
+                    );
+                  }),
+                ),
               );
             },
           );
@@ -155,7 +161,7 @@ class TransactionCard extends StatelessWidget {
           child: Row(
             children: [
               Text(
-                item.itemTitle,
+                item.className,
                 style: const TextStyle(
                   fontSize: 18,
                 ),
@@ -191,6 +197,8 @@ class AddTransactionDialog extends StatefulWidget {
 
 class _AddTransactionDialogState extends State<AddTransactionDialog> {
   final TextEditingController classNameController = TextEditingController();
+  final TextEditingController abbreviatedNameController =
+      TextEditingController();
   final List<String> courseTypes = [
     'Gen',
     'AP',
@@ -216,10 +224,20 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextField(
+              autocorrect: false,
               controller: classNameController,
               decoration: const InputDecoration(hintText: "Name of Class"),
             ),
             const SizedBox(height: 15.0),
+            TextField(
+              textCapitalization: TextCapitalization.characters,
+              autocorrect: false,
+              maxLength: 4,
+              controller: abbreviatedNameController,
+              decoration:
+                  const InputDecoration(hintText: "Abbreviated Name of Class"),
+            ),
+            const SizedBox(height: 10.0),
             const Text('Course Type:'),
             const SizedBox(height: 5.0),
             CustomDropdownButton2(
@@ -325,10 +343,12 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                 print(periodSelectionService.periodCodes);
                 widget.itemToAdd(
                   TransactionItem(
-                    itemTitle: classNameController.text,
+                    className: classNameController.text,
                     courseType: selectedType.toString(),
                     credits: selectedCredit.toString(),
                     periods: periodSelectionService.periods,
+                    periodCodes: periodSelectionService.periodCodes,
+                    abbreviatedName: abbreviatedNameController.text,
                   ),
                 );
 
@@ -390,11 +410,6 @@ class _SelectPeriodState extends State<SelectPeriod> {
   }
 
   Widget build(BuildContext context) {
-    final periodSelectionService = Provider.of<PeriodSelectionService>(context);
-    // for (int i = 0; i < periodSelectionService.periodCodes.length; i++) {
-    //   List<int> period = periodSelectionService.periodCodes[i];
-    //   isPeriodSelected[period[0]][period[1]] = true;
-    // }
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 20.0),
       child: Column(
