@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'pages/calc_page.dart';
 import 'pages/home_page.dart';
 import 'pages/schedule_page.dart';
 import 'package:provider/provider.dart';
@@ -16,14 +17,16 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   List<BottomNavigationBarItem> bottomNavItems = const [
+    BottomNavigationBarItem(
+        icon: Icon(Icons.calculate_outlined), label: 'GPA Calc'),
     BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: 'Home'),
     BottomNavigationBarItem(
         icon: Icon(Icons.schedule_rounded), label: 'Schedule')
   ];
 
-  List<Widget> pages = const [HomePage(), SchedulePage()];
+  List<Widget> pages = const [CalcPage(), HomePage(), SchedulePage()];
 
-  int _currentPageIndex = 0;
+  int _currentPageIndex = 1;
 
   @override
   Widget build(BuildContext context) {
