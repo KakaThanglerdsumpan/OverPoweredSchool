@@ -28,8 +28,8 @@ class SchedulePage extends StatelessWidget {
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 border: Border.all(),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(5.0))),
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(5.0))),
                           );
                         }),
                   ],

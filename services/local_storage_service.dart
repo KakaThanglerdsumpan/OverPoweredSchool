@@ -5,6 +5,7 @@ import '../model/transaction_item.dart';
 class LocalStorageService {
   static const String transactionsBoxKey = "transactionsBox";
   static const String availablePeriodsBoxKey = "availablePeriodsBox";
+  static const String scheduleMatrixBoxKey = "scheduleMatrixBox";
 
   static final LocalStorageService _instance = LocalStorageService._internal();
 
@@ -24,6 +25,7 @@ class LocalStorageService {
 
     await Hive.openBox<TransactionItem>(transactionsBoxKey);
     await Hive.openBox<List<dynamic>>(availablePeriodsBoxKey);
+    await Hive.openBox<List<dynamic>>(scheduleMatrixBoxKey);
   }
 
   void saveTransactionItem(TransactionItem transaction) {
@@ -43,6 +45,16 @@ class LocalStorageService {
           [false, false, false, false, false], // day B
           [false, false, false, false, false], // day C
           [false, false, false, false, false], // day D
+        ];
+  }
+
+  List<dynamic> getScheduleMatrix() {
+    return Hive.box<List<dynamic>>(scheduleMatrixBoxKey).get("matrix") ??
+        [
+          ['free', 'free', 'free', 'free', 'free'], // day A
+          ['free', 'free', 'free', 'free', 'free'], // day B
+          ['free', 'free', 'free', 'free', 'free'], // day C
+          ['free', 'free', 'free', 'free', 'free'], // day D
         ];
   }
 
