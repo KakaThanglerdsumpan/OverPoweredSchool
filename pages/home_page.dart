@@ -232,7 +232,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
             TextField(
               textCapitalization: TextCapitalization.characters,
               autocorrect: false,
-              maxLength: 4,
+              maxLength: 5,
               controller: abbreviatedNameController,
               decoration:
                   const InputDecoration(hintText: "Abbreviated Name of Class"),

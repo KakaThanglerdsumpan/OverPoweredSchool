@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../model/transaction_item.dart';
@@ -69,6 +70,19 @@ class LocalStorageService {
         .put("periods", availablePeriods);
   }
 
+  Future<void> updateScheduleMatrix(TransactionItem newClass) {
+    List<dynamic> currentMatrix = getScheduleMatrix();
+
+    List<dynamic> periods = newClass.periodCodes;
+
+    for (int i = 0; i < periods.length; i++) {
+      List<int> period = periods[i];
+      currentMatrix[period[0]][period[1]] = newClass.abbreviatedName;
+    }
+    return Hive.box<List<dynamic>>(scheduleMatrixBoxKey)
+        .put("matrix", currentMatrix);
+  }
+
   Future<void> updateAvailablePeriodsAfterDelete(
       List<dynamic> newlyAvailablePeriods) {
     List<dynamic> availablePeriods = getAvailablePeriods();
@@ -79,6 +93,16 @@ class LocalStorageService {
     }
     return Hive.box<List<dynamic>>(availablePeriodsBoxKey)
         .put("periods", availablePeriods);
+  }
+
+  Future<void> updateMatrixAfterDelete(List<dynamic> nowFreePeriods) {
+    List<dynamic> matrix = getScheduleMatrix();
+
+    for (int i = 0; i < nowFreePeriods.length; i++) {
+      List<int> period = nowFreePeriods[i];
+      matrix[period[0]][period[1]] = 'free';
+    }
+    return Hive.box<List<dynamic>>(scheduleMatrixBoxKey).put("matrix", matrix);
   }
 
   void deleteTransactionItem(TransactionItem classItem) {
@@ -93,6 +117,7 @@ class LocalStorageService {
     });
 
     updateAvailablePeriodsAfterDelete(classItem.periodCodes);
+    updateMatrixAfterDelete(classItem.periodCodes);
     // If we found the key, we delete it
     transactions.delete(desiredKey);
   }
