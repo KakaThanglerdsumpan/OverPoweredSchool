@@ -12,7 +12,7 @@ class TransactionItem {
   @HiveField(3)
   List<String> periods;
   @HiveField(4)
-  List<List<int>> periodCodes;
+  List<dynamic> periodCodes;
   @HiveField(5)
   String abbreviatedName;
   TransactionItem({

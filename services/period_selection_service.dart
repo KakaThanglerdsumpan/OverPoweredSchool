@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 class PeriodSelectionService extends ChangeNotifier {
   List<String> _periods = [];
 
-  List<List<int>> _periodCodes = [];
+  List<dynamic> _periodCodes = [];
 
-  List<List<bool>> _isPeriosSelectedTMP = [
+  List<dynamic> _isPeriosSelectedTMP = [
     [false, false, false, false, false],
     [false, false, false, false, false],
     [false, false, false, false, false],
@@ -14,21 +14,21 @@ class PeriodSelectionService extends ChangeNotifier {
 
   List<String> get periods => _periods;
 
-  List<List<int>> get periodCodes => _periodCodes;
+  List<dynamic> get periodCodes => _periodCodes;
 
-  List<List<bool>> get isPeriodSelectedTMP => _isPeriosSelectedTMP;
+  List<dynamic> get isPeriodSelectedTMP => _isPeriosSelectedTMP;
 
   set periods(List<String> selection) {
     _periods = selection;
     notifyListeners();
   }
 
-  set periodCodes(List<List<int>> selection) {
+  set periodCodes(List<dynamic> selection) {
     _periodCodes = selection;
     notifyListeners();
   }
 
-  set isPeriodSelectedTMP(List<List<bool>> selection) {
+  set isPeriodSelectedTMP(List<dynamic> selection) {
     _isPeriosSelectedTMP = selection;
     notifyListeners();
   }

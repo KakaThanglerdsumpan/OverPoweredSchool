@@ -183,7 +183,7 @@ class TransactionCard extends StatelessWidget {
 
 class AddTransactionDialog extends StatefulWidget {
   final Function(TransactionItem) itemToAdd;
-  final Function(List<List<int>>) periodsToUpdate;
+  final Function(List<dynamic>) periodsToUpdate;
 
   const AddTransactionDialog({
     required this.itemToAdd,
@@ -373,9 +373,9 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
 
 class SelectPeriod extends StatefulWidget {
   final Function(List<String>) periodsToAdd;
-  final Function(List<List<int>>) periodCodesToAdd;
-  final Function(List<List<bool>>) periodSelections;
-  final List<List<bool>> isPeriodSelectedTMP;
+  final Function(List<dynamic>) periodCodesToAdd;
+  final Function(List<dynamic>) periodSelections;
+  final List<dynamic> isPeriodSelectedTMP;
 
   SelectPeriod({
     required this.periodsToAdd,
@@ -395,7 +395,7 @@ class SelectPeriod extends StatefulWidget {
 }
 
 class _SelectPeriodState extends State<SelectPeriod> {
-  List<List<bool>> isPeriodSelected = [
+  List<dynamic> isPeriodSelected = [
     [false, false, false, false, false],
     [false, false, false, false, false],
     [false, false, false, false, false],
@@ -426,7 +426,8 @@ class _SelectPeriodState extends State<SelectPeriod> {
             width: 390,
             height: 250,
             child: Consumer<BudgetViewModel>(builder: (context, value, child) {
-              List<List<bool>> unavailablePeriods = value.getAvailablePeriods();
+              List<dynamic> unavailablePeriods = value.getAvailablePeriods();
+              print(unavailablePeriods);
               return ListView.builder(
                   shrinkWrap: true,
                   itemCount: 4,
@@ -493,7 +494,7 @@ class _SelectPeriodState extends State<SelectPeriod> {
           ),
           ElevatedButton(
               onPressed: () {
-                List<List<int>> selectedPeriodCodes = [];
+                List<dynamic> selectedPeriodCodes = [];
 
                 selectedPeriods.clear();
 

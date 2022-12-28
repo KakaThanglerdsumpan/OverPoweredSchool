@@ -23,7 +23,7 @@ class LocalStorageService {
     }
 
     await Hive.openBox<TransactionItem>(transactionsBoxKey);
-    await Hive.openBox<List<List<bool>>>(availablePeriodsBoxKey);
+    await Hive.openBox<List<dynamic>>(availablePeriodsBoxKey);
   }
 
   void saveTransactionItem(TransactionItem transaction) {
@@ -36,8 +36,8 @@ class LocalStorageService {
 
   /* for selection to stay when you are still filling out the information 
   for a class but haven't added the class yet */
-  List<List<bool>> getAvailablePeriods() {
-    return Hive.box<List<List<bool>>>(availablePeriodsBoxKey).get("periods") ??
+  List<dynamic> getAvailablePeriods() {
+    return Hive.box<List<dynamic>>(availablePeriodsBoxKey).get("periods") ??
         [
           [false, false, false, false, false], // day A
           [false, false, false, false, false], // day B
@@ -46,26 +46,26 @@ class LocalStorageService {
         ];
   }
 
-  Future<void> updateAvailablePeriods(List<List<int>> newlySelectedPeriods) {
-    List<List<bool>> availablePeriods = getAvailablePeriods();
+  Future<void> updateAvailablePeriods(List<dynamic> newlySelectedPeriods) {
+    List<dynamic> availablePeriods = getAvailablePeriods();
 
     for (int i = 0; i < newlySelectedPeriods.length; i++) {
       List<int> period = newlySelectedPeriods[i];
       availablePeriods[period[0]][period[1]] = true;
     }
-    return Hive.box<List<List<bool>>>(availablePeriodsBoxKey)
+    return Hive.box<List<dynamic>>(availablePeriodsBoxKey)
         .put("periods", availablePeriods);
   }
 
   Future<void> updateAvailablePeriodsAfterDelete(
-      List<List<int>> newlyAvailablePeriods) {
-    List<List<bool>> availablePeriods = getAvailablePeriods();
+      List<dynamic> newlyAvailablePeriods) {
+    List<dynamic> availablePeriods = getAvailablePeriods();
 
     for (int i = 0; i < newlyAvailablePeriods.length; i++) {
       List<int> period = newlyAvailablePeriods[i];
       availablePeriods[period[0]][period[1]] = false;
     }
-    return Hive.box<List<List<bool>>>(availablePeriodsBoxKey)
+    return Hive.box<List<dynamic>>(availablePeriodsBoxKey)
         .put("periods", availablePeriods);
   }
 

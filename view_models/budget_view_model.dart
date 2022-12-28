@@ -3,7 +3,7 @@ import '../model/transaction_item.dart';
 import '../services/local_storage_service.dart';
 
 class BudgetViewModel extends ChangeNotifier {
-  List<List<bool>> getAvailablePeriods() =>
+  List<dynamic> getAvailablePeriods() =>
       LocalStorageService().getAvailablePeriods();
   List<TransactionItem> get items => LocalStorageService().getAllTransactions();
 
@@ -12,7 +12,7 @@ class BudgetViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addSelectedPeriods(List<List<int>> periods) {
+  void addSelectedPeriods(List<dynamic> periods) {
     LocalStorageService().updateAvailablePeriods(periods);
     notifyListeners();
   }
