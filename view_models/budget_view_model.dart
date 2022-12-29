@@ -11,6 +11,7 @@ class BudgetViewModel extends ChangeNotifier {
   void addItem(TransactionItem item) {
     LocalStorageService().saveTransactionItem(item);
     LocalStorageService().updateScheduleMatrix(item);
+    print(item.periodCodes);
     notifyListeners();
   }
 

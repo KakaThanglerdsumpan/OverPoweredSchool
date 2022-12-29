@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:opschooldraft1/free_block.dart';
 
 import '../model/transaction_item.dart';
 
@@ -52,10 +53,10 @@ class LocalStorageService {
   List<dynamic> getScheduleMatrix() {
     return Hive.box<List<dynamic>>(scheduleMatrixBoxKey).get("matrix") ??
         [
-          ['free', 'free', 'free', 'free', 'free'], // day A
-          ['free', 'free', 'free', 'free', 'free'], // day B
-          ['free', 'free', 'free', 'free', 'free'], // day C
-          ['free', 'free', 'free', 'free', 'free'], // day D
+          [freeBlock, freeBlock, freeBlock, freeBlock, freeBlock], // day A
+          [freeBlock, freeBlock, freeBlock, freeBlock, freeBlock], // day B
+          [freeBlock, freeBlock, freeBlock, freeBlock, freeBlock], // day C
+          [freeBlock, freeBlock, freeBlock, freeBlock, freeBlock], // day D
         ];
   }
 
@@ -77,7 +78,7 @@ class LocalStorageService {
 
     for (int i = 0; i < periods.length; i++) {
       List<int> period = periods[i];
-      currentMatrix[period[0]][period[1]] = newClass.abbreviatedName;
+      currentMatrix[period[0]][period[1]] = newClass;
     }
     return Hive.box<List<dynamic>>(scheduleMatrixBoxKey)
         .put("matrix", currentMatrix);
@@ -100,7 +101,7 @@ class LocalStorageService {
 
     for (int i = 0; i < nowFreePeriods.length; i++) {
       List<int> period = nowFreePeriods[i];
-      matrix[period[0]][period[1]] = 'free';
+      matrix[period[0]][period[1]] = freeBlock;
     }
     return Hive.box<List<dynamic>>(scheduleMatrixBoxKey).put("matrix", matrix);
   }

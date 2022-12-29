@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 part 'transaction_item.g.dart';
 
@@ -15,6 +16,9 @@ class TransactionItem {
   List<dynamic> periodCodes;
   @HiveField(5)
   String abbreviatedName;
+  @HiveField(6)
+  @HiveType(typeId: 2)
+  int colorIndex;
   TransactionItem({
     required this.className,
     required this.courseType,
@@ -22,5 +26,6 @@ class TransactionItem {
     required this.periods,
     required this.periodCodes,
     required this.abbreviatedName,
+    required this.colorIndex,
   });
 }

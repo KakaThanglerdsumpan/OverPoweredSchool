@@ -1,6 +1,8 @@
 import 'package:dropdown_button2/custom_dropdown_button2.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:opschooldraft1/main.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
 
@@ -210,8 +212,23 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
   final List<String> credits = ['0.25', '0.50', '1.00', '1.50'];
   String? selectedCredit;
 
+  final List<Color> colors = [
+    Colors.red,
+    Colors.orange,
+    Colors.yellow,
+    Colors.green,
+    Colors.blue,
+    Colors.indigo,
+    Colors.purple,
+    Colors.pink,
+  ];
+
+  final List<int> colorIndices = [0, 1, 2, 3, 4, 5, 6, 7];
+  int? selectedColor;
+
   @override
   Widget build(BuildContext context) {
+    Size screenSize = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Column(children: [
@@ -234,34 +251,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
               autocorrect: false,
               maxLength: 5,
               controller: abbreviatedNameController,
-              decoration:
-                  const InputDecoration(hintText: "Abbreviated Name of Class"),
-            ),
-            const SizedBox(height: 10.0),
-            const Text('Course Type:'),
-            const SizedBox(height: 5.0),
-            CustomDropdownButton2(
-              hint: 'Select Type',
-              dropdownItems: courseTypes,
-              value: selectedType,
-              onChanged: (value) {
-                setState(() {
-                  selectedType = value;
-                });
-              },
-            ),
-            const SizedBox(height: 15.0),
-            const Text('Credits:'),
-            const SizedBox(height: 5.0),
-            CustomDropdownButton2(
-              hint: 'Select Credits',
-              dropdownItems: credits,
-              value: selectedCredit,
-              onChanged: (value) {
-                setState(() {
-                  selectedCredit = value;
-                });
-              },
+              decoration: const InputDecoration(hintText: "Abbreviated Name"),
             ),
             Row(
               children: [
@@ -328,6 +318,100 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                     child: const Text('Edit')),
               ],
             ),
+            const SizedBox(height: 10),
+            const Text('Course Type:'),
+            const SizedBox(height: 5.0),
+            SizedBox(
+              height: 50,
+              width: screenSize.width,
+              child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 4,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return SizedBox(
+                      height: 50,
+                      width: 80,
+                      child: OutlinedButton(
+                          onPressed: () {
+                            setState(() {
+                              selectedType = courseTypes[index];
+                            });
+                          },
+                          style: OutlinedButton.styleFrom(
+                              backgroundColor:
+                                  selectedType == courseTypes[index]
+                                      ? Colors.indigoAccent
+                                      : Colors.white),
+                          child: Text(
+                            courseTypes[index],
+                            style: TextStyle(
+                                color: selectedType == courseTypes[index]
+                                    ? Colors.white
+                                    : Colors.indigo),
+                          )),
+                    );
+                  }),
+            ),
+            const SizedBox(height: 15.0),
+            const Text('Credits:'),
+            const SizedBox(height: 5.0),
+            SizedBox(
+              height: 50,
+              width: screenSize.width,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      shrinkWrap: true,
+                      itemCount: 4,
+                      itemBuilder: (context, index) {
+                        return SizedBox(
+                          height: 50,
+                          width: 80,
+                          child: OutlinedButton(
+                              onPressed: () {
+                                setState(() {
+                                  selectedCredit = credits[index];
+                                });
+                              },
+                              style: OutlinedButton.styleFrom(
+                                  backgroundColor:
+                                      selectedCredit == credits[index]
+                                          ? Colors.indigoAccent
+                                          : Colors.white),
+                              child: Text(
+                                credits[index],
+                                style: TextStyle(
+                                    color: selectedCredit == credits[index]
+                                        ? Colors.white
+                                        : Colors.indigo),
+                              )),
+                        );
+                      }),
+                ],
+              ),
+            ),
+            const SizedBox(height: 15.0),
+            const Text('Color:'),
+            DropdownButton2(
+              dropdownDecoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              dropdownMaxHeight: 120,
+              itemPadding: EdgeInsets.all(8.0),
+              items: colorIndices
+                  .map((index) => DropdownMenuItem<int>(
+                      value: index,
+                      child: ColorDropDownItemChild(color: colors[index])))
+                  .toList(),
+              value: selectedColor,
+              onChanged: (int? index) {
+                setState(() {
+                  selectedColor = index;
+                });
+              },
+            ),
           ],
         ),
         const SizedBox(height: 15.0),
@@ -336,11 +420,6 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
               Provider.of<PeriodSelectionService>(context);
           return ElevatedButton(
               onPressed: () {
-                print(selectedType);
-                print(selectedCredit);
-                print(classNameController.text);
-                print(periodSelectionService.periods);
-                print(periodSelectionService.periodCodes);
                 widget.itemToAdd(
                   TransactionItem(
                     className: classNameController.text,
@@ -349,6 +428,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                     periods: periodSelectionService.periods,
                     periodCodes: periodSelectionService.periodCodes,
                     abbreviatedName: abbreviatedNameController.text,
+                    colorIndex: selectedColor!,
                   ),
                 );
 
@@ -427,7 +507,6 @@ class _SelectPeriodState extends State<SelectPeriod> {
             height: 250,
             child: Consumer<BudgetViewModel>(builder: (context, value, child) {
               List<dynamic> unavailablePeriods = value.getAvailablePeriods();
-              print(unavailablePeriods);
               return ListView.builder(
                   shrinkWrap: true,
                   itemCount: 4,
@@ -525,6 +604,23 @@ class _SelectPeriodState extends State<SelectPeriod> {
               child: const Text("Done"))
         ],
       ),
+    );
+  }
+}
+
+class ColorDropDownItemChild extends StatelessWidget {
+  final Color color;
+  const ColorDropDownItemChild({required this.color, Key? key})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 30,
+      height: 30,
+      decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(4)),
+          color: color),
     );
   }
 }
