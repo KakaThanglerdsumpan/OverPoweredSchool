@@ -243,12 +243,11 @@ class _AddClassInfoSheetState extends State<AddClassInfoSheet> {
                     children: [
                       const Text('Type',
                           style: TextStyle(fontWeight: FontWeight.bold)),
-
-                      // const SizedBox(width: 5),
                       SizedBox(
                         width: (screenSize.width - 138) / 4,
                         child: ListWheelScrollView(
                           itemExtent: 25,
+                          diameterRatio: 0.9,
                           physics: const FixedExtentScrollPhysics(),
                           children: courseTypes
                               .map((type) => DropdownMenuItem<String>(
@@ -258,11 +257,11 @@ class _AddClassInfoSheetState extends State<AddClassInfoSheet> {
                       ),
                       const Text('Credit',
                           style: TextStyle(fontWeight: FontWeight.bold)),
-                      // const SizedBox(width: 5),
                       SizedBox(
                         width: (screenSize.width - 138) / 4,
                         child: ListWheelScrollView(
                           itemExtent: 25,
+                          diameterRatio: 0.9,
                           physics: const FixedExtentScrollPhysics(),
                           children: credits
                               .map((credit) => DropdownMenuItem<String>(
@@ -272,12 +271,11 @@ class _AddClassInfoSheetState extends State<AddClassInfoSheet> {
                       ),
                       const Text('Grade',
                           style: TextStyle(fontWeight: FontWeight.bold)),
-
-                      // const SizedBox(width: 5),
                       SizedBox(
                         width: 25,
                         child: ListWheelScrollView(
                           itemExtent: 25,
+                          diameterRatio: 0.9,
                           physics: const FixedExtentScrollPhysics(),
                           children: grades
                               .map((grade) => DropdownMenuItem<String>(
@@ -289,6 +287,34 @@ class _AddClassInfoSheetState extends State<AddClassInfoSheet> {
                   ),
                 ),
               ),
+              SizedBox(
+                height: 180,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      height: 40,
+                      decoration: const BoxDecoration(boxShadow: [
+                        BoxShadow(
+                          color: Color.fromRGBO(250, 250, 250, 1),
+                          offset: Offset(0, -10),
+                          blurRadius: 10,
+                        )
+                      ]),
+                    ),
+                    Container(
+                      height: 40,
+                      decoration: const BoxDecoration(boxShadow: [
+                        BoxShadow(
+                          color: Color.fromRGBO(250, 250, 250, 1),
+                          offset: Offset(0, 10),
+                          blurRadius: 10,
+                        )
+                      ]),
+                    ),
+                  ],
+                ),
+              )
             ]),
           ],
         ),

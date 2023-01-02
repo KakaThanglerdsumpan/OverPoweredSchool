@@ -438,14 +438,6 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
 
                 widget.periodsToUpdate(selectedPeriodCodes);
 
-                // periodSelectionService.periods = [];
-                // periodSelectionService.periodCodes = [];
-                // periodSelectionService.isPeriodSelectedTMP = [
-                //   [false, false, false, false, false], // day A
-                //   [false, false, false, false, false], // day B
-                //   [false, false, false, false, false], // day C
-                //   [false, false, false, false, false], // day D
-                // ];
                 Navigator.pop(context);
               },
               child: const Text("Add"),
