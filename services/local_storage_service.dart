@@ -106,6 +106,11 @@ class LocalStorageService {
     return Hive.box<List<dynamic>>(scheduleMatrixBoxKey).put("matrix", matrix);
   }
 
+  Future<void> updateClassInfo(TransactionItem updatedClass, int index) {
+    return Hive.box<TransactionItem>(transactionsBoxKey)
+        .putAt(index, updatedClass);
+  }
+
   void deleteTransactionItem(TransactionItem classItem) {
     // Get a list of our transactions
     final transactions = Hive.box<TransactionItem>(transactionsBoxKey);

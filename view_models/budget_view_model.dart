@@ -15,6 +15,12 @@ class BudgetViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void editClassInfo(TransactionItem updatedClass, int index) {
+    LocalStorageService().updateClassInfo(updatedClass, index);
+    print(updatedClass.grade);
+    notifyListeners();
+  }
+
   void addSelectedPeriods(List<dynamic> periods) {
     LocalStorageService().updateAvailablePeriods(periods);
     notifyListeners();

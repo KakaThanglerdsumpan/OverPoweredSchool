@@ -14,11 +14,20 @@ class TransactionItem {
   String abbreviatedName;
   @HiveField(4)
   int colorIndex;
-  TransactionItem({
-    required this.className,
-    required this.periods,
-    required this.periodCodes,
-    required this.abbreviatedName,
-    required this.colorIndex,
-  });
+  @HiveField(5)
+  String courseType;
+  @HiveField(6)
+  String credit;
+  @HiveField(7)
+  String grade;
+  TransactionItem(
+      {required this.className,
+      required this.periods,
+      required this.periodCodes,
+      required this.abbreviatedName,
+      required this.colorIndex,
+      this.courseType = '0',
+      this.credit = '0',
+      this.grade = '0',
+      Key? key});
 }

@@ -562,7 +562,6 @@ class _SelectPeriodState extends State<SelectPeriod> {
         ElevatedButton(
             onPressed: () {
               List<dynamic> selectedPeriodCodes = [];
-
               selectedPeriods.clear();
 
               for (int i = 0; i < 4; i++) {

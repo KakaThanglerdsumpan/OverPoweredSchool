@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 
 import '../model/transaction_item.dart';
 import '../view_models/budget_view_model.dart';
-import 'home_page.dart';
 
 class CalcPage extends StatelessWidget {
   const CalcPage({Key? key}) : super(key: key);
@@ -67,6 +66,7 @@ class CalcPage extends StatelessWidget {
                           itemBuilder: (context, index) {
                             return ClassCard(
                               item: value.items[index],
+                              index: index,
                             );
                           });
                     }),
@@ -83,7 +83,9 @@ class CalcPage extends StatelessWidget {
 
 class ClassCard extends StatelessWidget {
   final TransactionItem item;
-  const ClassCard({required this.item, Key? key}) : super(key: key);
+  final int index;
+  const ClassCard({required this.index, required this.item, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -104,19 +106,14 @@ class ClassCard extends StatelessWidget {
                 child: Consumer<BudgetViewModel>(
                   builder: ((context, value, child) {
                     return AddClassInfoSheet(
-                      itemToAdd: (transactionItem) {
+                      classIndex: index,
+                      addInfoTo: item,
+                      updatedClass: (updatedClass) {
                         final budgetService = Provider.of<BudgetViewModel>(
                             context,
                             listen: false);
 
-                        budgetService.addItem(transactionItem);
-                      },
-                      periodsToUpdate: (periods) {
-                        final budgetService = Provider.of<BudgetViewModel>(
-                            context,
-                            listen: false);
-
-                        budgetService.addSelectedPeriods(periods);
+                        budgetService.editClassInfo(updatedClass, index);
                       },
                     );
                   }),
@@ -155,12 +152,69 @@ class ClassCard extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              const SizedBox(width: 10),
-              const SizedBox(width: 35, child: Text('IBSL')),
-              const SizedBox(width: 20),
-              const SizedBox(width: 44, child: Text('1.50')),
-              const SizedBox(width: 20),
-              const SizedBox(width: 43, child: Text('D-')),
+              item.courseType == '0'
+                  ? SizedBox(
+                      height: 20,
+                      child: Center(
+                        child: ElevatedButton(
+                            style: TextButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 0)),
+                            onPressed: () {
+                              showModalBottomSheet<dynamic>(
+                                isScrollControlled: true,
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(40),
+                                        topRight: Radius.circular(40))),
+                                context: context,
+                                builder: (context) {
+                                  return Container(
+                                    height: 400,
+                                    child: Consumer<BudgetViewModel>(
+                                      builder: ((context, value, child) {
+                                        return AddClassInfoSheet(
+                                          classIndex: index,
+                                          addInfoTo: item,
+                                          updatedClass: (updatedClass) {
+                                            final budgetService =
+                                                Provider.of<BudgetViewModel>(
+                                                    context,
+                                                    listen: false);
+
+                                            budgetService.editClassInfo(
+                                                updatedClass, index);
+                                          },
+                                        );
+                                      }),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                            child: Text('Fill in information')),
+                      ),
+                    )
+                  : Row(
+                      children: [
+                        const SizedBox(width: 10),
+                        SizedBox(width: 35, child: Text(item.courseType)),
+                        const SizedBox(width: 20),
+                        SizedBox(
+                            width: 44,
+                            child: Text(
+                              item.credit.toString(),
+                              textAlign: TextAlign.center,
+                            )),
+                        const SizedBox(width: 20),
+                        SizedBox(
+                            width: 43,
+                            child: Text(
+                              item.grade,
+                              textAlign: TextAlign.center,
+                            )),
+                      ],
+                    ),
             ],
           ),
         ),
@@ -170,12 +224,14 @@ class ClassCard extends StatelessWidget {
 }
 
 class AddClassInfoSheet extends StatefulWidget {
-  final Function(TransactionItem) itemToAdd;
-  final Function(List<dynamic>) periodsToUpdate;
+  final Function(TransactionItem) updatedClass;
+  final TransactionItem addInfoTo;
+  final int classIndex;
 
   const AddClassInfoSheet({
-    required this.itemToAdd,
-    required this.periodsToUpdate,
+    required this.addInfoTo,
+    required this.updatedClass,
+    required this.classIndex,
     Key? key,
   }) : super(key: key);
 
@@ -190,10 +246,10 @@ class _AddClassInfoSheetState extends State<AddClassInfoSheet> {
     'IBSL',
     'IBHL',
   ];
-  String? selectedType;
+  String selectedType = 'Gen';
 
   final List<String> credits = ['0.25', '0.50', '1.00', '1.50'];
-  String? selectedCredit;
+  String selectedCredit = '0.25';
 
   final List<String> grades = [
     'A',
@@ -209,17 +265,33 @@ class _AddClassInfoSheetState extends State<AddClassInfoSheet> {
     'D-',
     'F'
   ];
-  String? selectedGrade;
+  String selectedGrade = 'A';
 
   @override
+  void initState() {
+    super.initState();
+    final currInfo = widget.addInfoTo;
+    if (currInfo.courseType != '0') {
+      selectedType = currInfo.courseType;
+    }
+    if (currInfo.credit != '0') {
+      selectedCredit = currInfo.credit;
+    }
+    if (currInfo.grade != '0') {
+      selectedGrade = currInfo.grade;
+    }
+  }
+
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
+    TransactionItem currClass = widget.addInfoTo;
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Column(children: [
-        const Text(
-          'Add Class Information',
+        Text(
+          'Add Information for ${widget.addInfoTo.className}',
           style: TextStyle(fontSize: 18),
+          textAlign: TextAlign.center,
         ),
         const SizedBox(height: 15.0),
         Column(
@@ -246,9 +318,17 @@ class _AddClassInfoSheetState extends State<AddClassInfoSheet> {
                       SizedBox(
                         width: (screenSize.width - 138) / 4,
                         child: ListWheelScrollView(
+                          controller: currClass.courseType == '0'
+                              ? null
+                              : FixedExtentScrollController(
+                                  initialItem: courseTypes
+                                      .indexOf(currClass.courseType)),
                           itemExtent: 25,
                           diameterRatio: 0.9,
                           physics: const FixedExtentScrollPhysics(),
+                          onSelectedItemChanged: (value) {
+                            selectedType = courseTypes[value];
+                          },
                           children: courseTypes
                               .map((type) => DropdownMenuItem<String>(
                                   value: type, child: Text(type)))
@@ -260,9 +340,17 @@ class _AddClassInfoSheetState extends State<AddClassInfoSheet> {
                       SizedBox(
                         width: (screenSize.width - 138) / 4,
                         child: ListWheelScrollView(
+                          controller: currClass.credit == '0'
+                              ? null
+                              : FixedExtentScrollController(
+                                  initialItem:
+                                      credits.indexOf(currClass.credit)),
                           itemExtent: 25,
                           diameterRatio: 0.9,
                           physics: const FixedExtentScrollPhysics(),
+                          onSelectedItemChanged: (value) {
+                            selectedCredit = credits[value];
+                          },
                           children: credits
                               .map((credit) => DropdownMenuItem<String>(
                                   value: credit, child: Text(credit)))
@@ -274,9 +362,16 @@ class _AddClassInfoSheetState extends State<AddClassInfoSheet> {
                       SizedBox(
                         width: 25,
                         child: ListWheelScrollView(
+                          controller: currClass.grade == '0'
+                              ? null
+                              : FixedExtentScrollController(
+                                  initialItem: grades.indexOf(currClass.grade)),
                           itemExtent: 25,
                           diameterRatio: 0.9,
                           physics: const FixedExtentScrollPhysics(),
+                          onSelectedItemChanged: (value) {
+                            selectedGrade = grades[value];
+                          },
                           children: grades
                               .map((grade) => DropdownMenuItem<String>(
                                   value: grade, child: Text(grade)))
@@ -322,6 +417,17 @@ class _AddClassInfoSheetState extends State<AddClassInfoSheet> {
         Consumer<BudgetViewModel>(builder: ((context, value, child) {
           return ElevatedButton(
               onPressed: () {
+                TransactionItem curr = widget.addInfoTo;
+                widget.updatedClass(TransactionItem(
+                  className: curr.className,
+                  abbreviatedName: curr.abbreviatedName,
+                  periodCodes: curr.periodCodes,
+                  periods: curr.periods,
+                  colorIndex: curr.colorIndex,
+                  courseType: selectedType,
+                  credit: selectedCredit,
+                  grade: selectedGrade,
+                ));
                 Navigator.pop(context);
               },
               child: const Text("Add"));

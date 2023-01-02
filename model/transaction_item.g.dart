@@ -22,13 +22,16 @@ class TransactionItemAdapter extends TypeAdapter<TransactionItem> {
       periodCodes: (fields[2] as List).cast<dynamic>(),
       abbreviatedName: fields[3] as String,
       colorIndex: fields[4] as int,
+      courseType: fields[5] as String,
+      credit: fields[6] as String,
+      grade: fields[7] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, TransactionItem obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.className)
       ..writeByte(1)
@@ -38,7 +41,13 @@ class TransactionItemAdapter extends TypeAdapter<TransactionItem> {
       ..writeByte(3)
       ..write(obj.abbreviatedName)
       ..writeByte(4)
-      ..write(obj.colorIndex);
+      ..write(obj.colorIndex)
+      ..writeByte(5)
+      ..write(obj.courseType)
+      ..writeByte(6)
+      ..write(obj.credit)
+      ..writeByte(7)
+      ..write(obj.grade);
   }
 
   @override
