@@ -2,6 +2,7 @@ import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hive/hive.dart';
 import 'package:opschooldraft1/main.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
@@ -239,163 +240,219 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
     'F'
   ];
   String? selectedGrade;
+  List<dynamic> isPeriodSelected = [
+    [false, false, false, false, false],
+    [false, false, false, false, false],
+    [false, false, false, false, false],
+    [false, false, false, false, false],
+  ];
 
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: Column(children: [
-        const Text(
-          'Add a Class',
-          style: TextStyle(fontSize: 18),
-        ),
-        const SizedBox(height: 15.0),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Column(
           children: [
-            TextField(
-              autocorrect: false,
-              controller: classNameController,
-              decoration: const InputDecoration(hintText: "Name of Class"),
+            const Text(
+              'Add a Class',
+              style: TextStyle(fontSize: 18),
             ),
             const SizedBox(height: 15.0),
-            TextField(
-              textCapitalization: TextCapitalization.characters,
-              autocorrect: false,
-              maxLength: 5,
-              controller: abbreviatedNameController,
-              decoration: const InputDecoration(hintText: "Abbreviated Name"),
-            ),
-            Row(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Period: '),
-                Flexible(
-                  child: Consumer<PeriodSelectionService>(
-                    builder: ((context, value, child) {
-                      final periodSelectionService =
-                          Provider.of<PeriodSelectionService>(context);
-
-                      return Text(periodSelectionService.periods.toString());
-                    }),
-                  ),
+                TextField(
+                  autocorrect: false,
+                  controller: classNameController,
+                  decoration: const InputDecoration(hintText: "Name of Class"),
                 ),
-                TextButton(
-                    onPressed: () {
-                      showModalBottomSheet(
-                          shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(40),
-                                  topRight: Radius.circular(40))),
-                          context: context,
-                          builder: (context) {
-                            return Consumer<BudgetViewModel>(
-                                builder: ((context, value, child) {
-                              return Consumer<PeriodSelectionService>(
-                                  builder: (context, value, child) {
-                                final periodSelectionService =
-                                    Provider.of<PeriodSelectionService>(
-                                        context);
+                const SizedBox(height: 15.0),
+                TextField(
+                  textCapitalization: TextCapitalization.characters,
+                  autocorrect: false,
+                  maxLength: 5,
+                  controller: abbreviatedNameController,
+                  decoration:
+                      const InputDecoration(hintText: "Abbreviated Name"),
+                ),
+                const Text('Periods: '),
+                Column(
+                  children: [
+                    SizedBox(
+                      width: 390,
+                      height: 250,
+                      child: Consumer<BudgetViewModel>(
+                          builder: (context, value, child) {
+                        List<dynamic> unavailablePeriods =
+                            value.getAvailablePeriods();
+                        return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: 4,
+                            itemBuilder: (context, i) {
+                              String day = '';
 
-                                return SelectPeriod(
-                                  periodsToAdd: (periods) {
-                                    final periodSelectionService =
-                                        Provider.of<PeriodSelectionService>(
-                                            context,
-                                            listen: false);
+                              if (i == 0) {
+                                day = 'A';
+                              } else if (i == 1) {
+                                day = 'B';
+                              } else if (i == 2) {
+                                day = 'C';
+                              } else if (i == 3) {
+                                day = 'D';
+                              }
 
-                                    periodSelectionService.periods = periods;
-                                  },
-                                  periodCodesToAdd: (periodCodes) {
-                                    final periodSelectionService =
-                                        Provider.of<PeriodSelectionService>(
-                                            context,
-                                            listen: false);
-                                    periodSelectionService.periodCodes =
-                                        periodCodes;
-                                  },
-                                  periodSelections: (bools) {
-                                    final periodSelectionService =
-                                        Provider.of<PeriodSelectionService>(
-                                            context,
-                                            listen: false);
-                                    periodSelectionService.isPeriodSelectedTMP =
-                                        bools;
-                                  },
-                                  isPeriodSelectedTMP: periodSelectionService
-                                      .isPeriodSelectedTMP,
-                                );
-                              });
-                            }));
-                          });
-                    },
-                    child: const Text('Edit')),
+                              return Column(
+                                children: [
+                                  const SizedBox(height: 10),
+                                  SizedBox(
+                                    width: 390,
+                                    height: 48,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        ListView.builder(
+                                            scrollDirection: Axis.horizontal,
+                                            shrinkWrap: true,
+                                            itemCount: 5,
+                                            itemBuilder: (context, j) {
+                                              return OutlinedButton(
+                                                  onPressed: unavailablePeriods[
+                                                          i][j]
+                                                      ? null
+                                                      : () {
+                                                          setState(() {
+                                                            isPeriodSelected[i]
+                                                                    [j] =
+                                                                !isPeriodSelected[
+                                                                    i][j];
+                                                          });
+                                                        },
+                                                  style: OutlinedButton.styleFrom(
+                                                      backgroundColor:
+                                                          unavailablePeriods[i]
+                                                                  [j]
+                                                              ? Colors.grey[400]
+                                                              : (isPeriodSelected[
+                                                                      i][j]
+                                                                  ? Colors
+                                                                      .indigoAccent
+                                                                  : Colors
+                                                                      .white)),
+                                                  child: Text(
+                                                    '$day${j + 1}',
+                                                    style: TextStyle(
+                                                        color: unavailablePeriods[
+                                                                i][j]
+                                                            ? Colors.white
+                                                            : (isPeriodSelected[
+                                                                    i][j]
+                                                                ? Colors.white
+                                                                : Colors
+                                                                    .indigo)),
+                                                  ));
+                                            }),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              );
+                            });
+                      }),
+                    ),
+                  ],
+                ),
+                Row(
+                  // mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('Color:'),
+                    const SizedBox(width: 5),
+                    DropdownButton2(
+                      buttonDecoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(color: Colors.grey)),
+                      buttonPadding: const EdgeInsets.only(left: 10),
+                      underline: Container(),
+                      dropdownDecoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      dropdownMaxHeight: 120,
+                      dropdownWidth: 50,
+                      icon: null,
+                      alignment: Alignment.center,
+                      itemPadding: const EdgeInsets.all(8.0),
+                      items: colorIndices
+                          .map((index) => DropdownMenuItem<int>(
+                              value: index,
+                              child:
+                                  ColorDropDownItemChild(color: colors[index])))
+                          .toList(),
+                      value: selectedColor,
+                      onChanged: (int? index) {
+                        setState(() {
+                          selectedColor = index;
+                        });
+                      },
+                    ),
+                  ],
+                ),
               ],
             ),
-            Consumer<BudgetViewModel>(builder: ((context, value, child) {
-              return Consumer<PeriodSelectionService>(
-                  builder: (context, value, child) {
-                final periodSelectionService =
-                    Provider.of<PeriodSelectionService>(context);
-
-                return SelectPeriod(
-                  periodsToAdd: (periods) {
-                    final periodSelectionService =
-                        Provider.of<PeriodSelectionService>(context,
-                            listen: false);
-
-                    periodSelectionService.periods = periods;
-                  },
-                  periodCodesToAdd: (periodCodes) {
-                    final periodSelectionService =
-                        Provider.of<PeriodSelectionService>(context,
-                            listen: false);
-                    periodSelectionService.periodCodes = periodCodes;
-                  },
-                  periodSelections: (bools) {
-                    final periodSelectionService =
-                        Provider.of<PeriodSelectionService>(context,
-                            listen: false);
-                    periodSelectionService.isPeriodSelectedTMP = bools;
-                  },
-                  isPeriodSelectedTMP:
-                      periodSelectionService.isPeriodSelectedTMP,
-                );
-              });
-            })),
-          ],
-        ),
-        const SizedBox(height: 15.0),
-        Consumer<PeriodSelectionService>(builder: ((context, value, child) {
-          final periodSelectionService =
-              Provider.of<PeriodSelectionService>(context);
-          return ElevatedButton(
+            const SizedBox(height: 30.0),
+            ElevatedButton(
               onPressed: () {
+                List<dynamic> selectedPeriodCodes = []; // in the form [i,j]
+                List<String> selectedPeriods = []; // in the form A3, B2, etc
+
+                selectedPeriods.clear();
+
+                for (int i = 0; i < 4; i++) {
+                  String day = '';
+                  if (i == 0) {
+                    day = 'A';
+                  } else if (i == 1) {
+                    day = 'B';
+                  } else if (i == 2) {
+                    day = 'C';
+                  } else if (i == 3) {
+                    day = 'D';
+                  }
+                  for (int j = 0; j < 5; j++) {
+                    if (isPeriodSelected[i][j]) {
+                      selectedPeriods.add('$day${j + 1}');
+                      selectedPeriodCodes.add([i, j]);
+                    }
+                  }
+                }
+
                 widget.itemToAdd(
                   TransactionItem(
                     className: classNameController.text,
-                    periods: periodSelectionService.periods,
-                    periodCodes: periodSelectionService.periodCodes,
+                    periods: selectedPeriods,
+                    periodCodes: selectedPeriodCodes,
                     abbreviatedName: abbreviatedNameController.text,
                     colorIndex: selectedColor!,
                   ),
                 );
 
-                widget.periodsToUpdate(periodSelectionService.periodCodes);
+                widget.periodsToUpdate(selectedPeriodCodes);
 
-                periodSelectionService.periods = [];
-                periodSelectionService.periodCodes = [];
-                periodSelectionService.isPeriodSelectedTMP = [
-                  [false, false, false, false, false], // day A
-                  [false, false, false, false, false], // day B
-                  [false, false, false, false, false], // day C
-                  [false, false, false, false, false], // day D
-                ];
+                // periodSelectionService.periods = [];
+                // periodSelectionService.periodCodes = [];
+                // periodSelectionService.isPeriodSelectedTMP = [
+                //   [false, false, false, false, false], // day A
+                //   [false, false, false, false, false], // day B
+                //   [false, false, false, false, false], // day C
+                //   [false, false, false, false, false], // day D
+                // ];
                 Navigator.pop(context);
               },
-              child: const Text("Add"));
-        }))
-      ]),
+              child: const Text("Add"),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -538,7 +595,6 @@ class _SelectPeriodState extends State<SelectPeriod> {
               widget.periodsToAdd(selectedPeriods);
               widget.periodCodesToAdd(selectedPeriodCodes);
               widget.periodSelections(isPeriodSelected);
-              Navigator.pop(context);
             },
             child: const Text("Done"))
       ],

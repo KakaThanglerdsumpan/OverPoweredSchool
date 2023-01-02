@@ -32,8 +32,6 @@ class MyApp extends StatelessWidget {
             create: (_) => ThemeService(sharedPreferences)),
         ChangeNotifierProvider<BudgetViewModel>(
             create: (_) => BudgetViewModel()),
-        ChangeNotifierProvider<PeriodSelectionService>(
-            create: (_) => PeriodSelectionService()),
       ],
       child: Builder(
         builder: (BuildContext context) {
@@ -47,7 +45,7 @@ class MyApp extends StatelessWidget {
                         : Brightness.light,
                     seedColor: Colors.indigo),
               ),
-              home: Home());
+              home: const Home());
         },
       ),
     );
