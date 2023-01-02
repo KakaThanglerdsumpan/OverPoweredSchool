@@ -92,8 +92,6 @@ class HomePage extends StatelessWidget {
                           itemCount: value.items.length,
                           physics: const ClampingScrollPhysics(),
                           itemBuilder: (context, index) {
-                            print("course type: " +
-                                value.items[index].courseType);
                             return TransactionCard(
                               item: value.items[index],
                             );
@@ -226,6 +224,22 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
   final List<int> colorIndices = [0, 1, 2, 3, 4, 5, 6, 7];
   int? selectedColor;
 
+  final List<String> grades = [
+    'A',
+    'A-',
+    'B+',
+    'B',
+    'B-',
+    'C+',
+    'C',
+    'C-',
+    'D+',
+    'D',
+    'D-',
+    'F'
+  ];
+  String? selectedGrade;
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -318,100 +332,37 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                     child: const Text('Edit')),
               ],
             ),
-            const SizedBox(height: 10),
-            const Text('Course Type:'),
-            const SizedBox(height: 5.0),
-            SizedBox(
-              height: 50,
-              width: screenSize.width,
-              child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 4,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return SizedBox(
-                      height: 50,
-                      width: 80,
-                      child: OutlinedButton(
-                          onPressed: () {
-                            setState(() {
-                              selectedType = courseTypes[index];
-                            });
-                          },
-                          style: OutlinedButton.styleFrom(
-                              backgroundColor:
-                                  selectedType == courseTypes[index]
-                                      ? Colors.indigoAccent
-                                      : Colors.white),
-                          child: Text(
-                            courseTypes[index],
-                            style: TextStyle(
-                                color: selectedType == courseTypes[index]
-                                    ? Colors.white
-                                    : Colors.indigo),
-                          )),
-                    );
-                  }),
-            ),
-            const SizedBox(height: 15.0),
-            const Text('Credits:'),
-            const SizedBox(height: 5.0),
-            SizedBox(
-              height: 50,
-              width: screenSize.width,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      shrinkWrap: true,
-                      itemCount: 4,
-                      itemBuilder: (context, index) {
-                        return SizedBox(
-                          height: 50,
-                          width: 80,
-                          child: OutlinedButton(
-                              onPressed: () {
-                                setState(() {
-                                  selectedCredit = credits[index];
-                                });
-                              },
-                              style: OutlinedButton.styleFrom(
-                                  backgroundColor:
-                                      selectedCredit == credits[index]
-                                          ? Colors.indigoAccent
-                                          : Colors.white),
-                              child: Text(
-                                credits[index],
-                                style: TextStyle(
-                                    color: selectedCredit == credits[index]
-                                        ? Colors.white
-                                        : Colors.indigo),
-                              )),
-                        );
-                      }),
-                ],
-              ),
-            ),
-            const SizedBox(height: 15.0),
-            const Text('Color:'),
-            DropdownButton2(
-              dropdownDecoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
-              dropdownMaxHeight: 120,
-              itemPadding: EdgeInsets.all(8.0),
-              items: colorIndices
-                  .map((index) => DropdownMenuItem<int>(
-                      value: index,
-                      child: ColorDropDownItemChild(color: colors[index])))
-                  .toList(),
-              value: selectedColor,
-              onChanged: (int? index) {
-                setState(() {
-                  selectedColor = index;
-                });
-              },
-            ),
+            Consumer<BudgetViewModel>(builder: ((context, value, child) {
+              return Consumer<PeriodSelectionService>(
+                  builder: (context, value, child) {
+                final periodSelectionService =
+                    Provider.of<PeriodSelectionService>(context);
+
+                return SelectPeriod(
+                  periodsToAdd: (periods) {
+                    final periodSelectionService =
+                        Provider.of<PeriodSelectionService>(context,
+                            listen: false);
+
+                    periodSelectionService.periods = periods;
+                  },
+                  periodCodesToAdd: (periodCodes) {
+                    final periodSelectionService =
+                        Provider.of<PeriodSelectionService>(context,
+                            listen: false);
+                    periodSelectionService.periodCodes = periodCodes;
+                  },
+                  periodSelections: (bools) {
+                    final periodSelectionService =
+                        Provider.of<PeriodSelectionService>(context,
+                            listen: false);
+                    periodSelectionService.isPeriodSelectedTMP = bools;
+                  },
+                  isPeriodSelectedTMP:
+                      periodSelectionService.isPeriodSelectedTMP,
+                );
+              });
+            })),
           ],
         ),
         const SizedBox(height: 15.0),
@@ -423,8 +374,6 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                 widget.itemToAdd(
                   TransactionItem(
                     className: classNameController.text,
-                    courseType: selectedType.toString(),
-                    credits: selectedCredit.toString(),
                     periods: periodSelectionService.periods,
                     periodCodes: periodSelectionService.periodCodes,
                     abbreviatedName: abbreviatedNameController.text,
@@ -490,95 +439,19 @@ class _SelectPeriodState extends State<SelectPeriod> {
   }
 
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 20.0),
-      child: Column(
-        children: [
-          const Text(
-            'Select the periods you have this class in:',
-            style: TextStyle(fontSize: 18),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          SizedBox(
-            width: 390,
-            height: 250,
-            child: Consumer<BudgetViewModel>(builder: (context, value, child) {
-              List<dynamic> unavailablePeriods = value.getAvailablePeriods();
-              return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: 4,
-                  itemBuilder: (context, i) {
-                    String day = '';
-
-                    if (i == 0) {
-                      day = 'A';
-                    } else if (i == 1) {
-                      day = 'B';
-                    } else if (i == 2) {
-                      day = 'C';
-                    } else if (i == 3) {
-                      day = 'D';
-                    }
-
-                    return Column(
-                      children: [
-                        const SizedBox(height: 10),
-                        SizedBox(
-                          width: 390,
-                          height: 48,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  shrinkWrap: true,
-                                  itemCount: 5,
-                                  itemBuilder: (context, j) {
-                                    return OutlinedButton(
-                                        onPressed: unavailablePeriods[i][j]
-                                            ? null
-                                            : () {
-                                                setState(() {
-                                                  isPeriodSelected[i][j] =
-                                                      !isPeriodSelected[i][j];
-                                                });
-                                              },
-                                        style: OutlinedButton.styleFrom(
-                                            backgroundColor:
-                                                unavailablePeriods[i][j]
-                                                    ? Colors.grey[400]
-                                                    : (isPeriodSelected[i][j]
-                                                        ? Colors.indigoAccent
-                                                        : Colors.white)),
-                                        child: Text(
-                                          '$day${j + 1}',
-                                          style: TextStyle(
-                                              color: unavailablePeriods[i][j]
-                                                  ? Colors.white
-                                                  : (isPeriodSelected[i][j]
-                                                      ? Colors.white
-                                                      : Colors.indigo)),
-                                        ));
-                                  }),
-                            ],
-                          ),
-                        ),
-                      ],
-                    );
-                  });
-            }),
-          ),
-          ElevatedButton(
-              onPressed: () {
-                List<dynamic> selectedPeriodCodes = [];
-
-                selectedPeriods.clear();
-
-                for (int i = 0; i < 4; i++) {
+    return Column(
+      children: [
+        SizedBox(
+          width: 390,
+          height: 250,
+          child: Consumer<BudgetViewModel>(builder: (context, value, child) {
+            List<dynamic> unavailablePeriods = value.getAvailablePeriods();
+            return ListView.builder(
+                shrinkWrap: true,
+                itemCount: 4,
+                itemBuilder: (context, i) {
                   String day = '';
+
                   if (i == 0) {
                     day = 'A';
                   } else if (i == 1) {
@@ -588,22 +461,87 @@ class _SelectPeriodState extends State<SelectPeriod> {
                   } else if (i == 3) {
                     day = 'D';
                   }
-                  for (int j = 0; j < 5; j++) {
-                    if (isPeriodSelected[i][j]) {
-                      selectedPeriods.add('$day${j + 1}');
-                      selectedPeriodCodes.add([i, j]);
-                    }
+
+                  return Column(
+                    children: [
+                      const SizedBox(height: 10),
+                      SizedBox(
+                        width: 390,
+                        height: 48,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                shrinkWrap: true,
+                                itemCount: 5,
+                                itemBuilder: (context, j) {
+                                  return OutlinedButton(
+                                      onPressed: unavailablePeriods[i][j]
+                                          ? null
+                                          : () {
+                                              setState(() {
+                                                isPeriodSelected[i][j] =
+                                                    !isPeriodSelected[i][j];
+                                              });
+                                            },
+                                      style: OutlinedButton.styleFrom(
+                                          backgroundColor: unavailablePeriods[i]
+                                                  [j]
+                                              ? Colors.grey[400]
+                                              : (isPeriodSelected[i][j]
+                                                  ? Colors.indigoAccent
+                                                  : Colors.white)),
+                                      child: Text(
+                                        '$day${j + 1}',
+                                        style: TextStyle(
+                                            color: unavailablePeriods[i][j]
+                                                ? Colors.white
+                                                : (isPeriodSelected[i][j]
+                                                    ? Colors.white
+                                                    : Colors.indigo)),
+                                      ));
+                                }),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                });
+          }),
+        ),
+        ElevatedButton(
+            onPressed: () {
+              List<dynamic> selectedPeriodCodes = [];
+
+              selectedPeriods.clear();
+
+              for (int i = 0; i < 4; i++) {
+                String day = '';
+                if (i == 0) {
+                  day = 'A';
+                } else if (i == 1) {
+                  day = 'B';
+                } else if (i == 2) {
+                  day = 'C';
+                } else if (i == 3) {
+                  day = 'D';
+                }
+                for (int j = 0; j < 5; j++) {
+                  if (isPeriodSelected[i][j]) {
+                    selectedPeriods.add('$day${j + 1}');
+                    selectedPeriodCodes.add([i, j]);
                   }
                 }
+              }
 
-                widget.periodsToAdd(selectedPeriods);
-                widget.periodCodesToAdd(selectedPeriodCodes);
-                widget.periodSelections(isPeriodSelected);
-                Navigator.pop(context);
-              },
-              child: const Text("Done"))
-        ],
-      ),
+              widget.periodsToAdd(selectedPeriods);
+              widget.periodCodesToAdd(selectedPeriodCodes);
+              widget.periodSelections(isPeriodSelected);
+              Navigator.pop(context);
+            },
+            child: const Text("Done"))
+      ],
     );
   }
 }

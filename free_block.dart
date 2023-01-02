@@ -3,8 +3,6 @@ import 'package:opschooldraft1/model/transaction_item.dart';
 
 TransactionItem freeBlock = TransactionItem(
   className: 'free',
-  courseType: '',
-  credits: '',
   periods: [''],
   periodCodes: [],
   abbreviatedName: 'free',
