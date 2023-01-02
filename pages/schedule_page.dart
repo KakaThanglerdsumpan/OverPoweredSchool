@@ -15,7 +15,7 @@ class SchedulePage extends StatelessWidget {
       Colors.yellow,
       Colors.green,
       Colors.blue,
-      Colors.indigo,
+      Colors.indigoAccent,
       Colors.purple,
       Colors.pink,
       Colors.grey[400]!,
@@ -37,7 +37,7 @@ class SchedulePage extends StatelessWidget {
                       width: 370,
                       height: 30,
                       decoration: const BoxDecoration(
-                          color: Colors.indigoAccent,
+                          color: Colors.indigo,
                           borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(10),
                               topRight: Radius.circular(10),
@@ -59,7 +59,7 @@ class SchedulePage extends StatelessWidget {
                       height: 25,
                       width: 35,
                       decoration: const BoxDecoration(
-                          color: Colors.indigoAccent,
+                          color: Colors.indigo,
                           borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(10),
                               topRight: Radius.circular(2.5),
@@ -77,7 +77,7 @@ class SchedulePage extends StatelessWidget {
                       width: 362 / 5,
                       height: 25,
                       decoration: const BoxDecoration(
-                        color: Colors.indigoAccent,
+                        color: Colors.indigo,
                         borderRadius: BorderRadius.all(Radius.circular(2.5)),
                       ),
                       child: const Center(
@@ -89,7 +89,7 @@ class SchedulePage extends StatelessWidget {
                       width: 362 / 5,
                       height: 25,
                       decoration: const BoxDecoration(
-                        color: Colors.indigoAccent,
+                        color: Colors.indigo,
                         borderRadius: BorderRadius.all(Radius.circular(2.5)),
                       ),
                       child: const Center(
@@ -101,7 +101,7 @@ class SchedulePage extends StatelessWidget {
                       width: 362 / 5,
                       height: 25,
                       decoration: const BoxDecoration(
-                        color: Colors.indigoAccent,
+                        color: Colors.indigo,
                         borderRadius: BorderRadius.all(Radius.circular(2.5)),
                       ),
                       child: const Center(
@@ -113,7 +113,7 @@ class SchedulePage extends StatelessWidget {
                       width: 362 / 5,
                       height: 25,
                       decoration: const BoxDecoration(
-                        color: Colors.indigoAccent,
+                        color: Colors.indigo,
                         borderRadius: BorderRadius.all(Radius.circular(2.5)),
                       ),
                       child: const Center(
@@ -125,7 +125,7 @@ class SchedulePage extends StatelessWidget {
                       width: 362 / 5,
                       height: 25,
                       decoration: const BoxDecoration(
-                        color: Colors.indigoAccent,
+                        color: Colors.indigo,
                         borderRadius: BorderRadius.all(Radius.circular(2.5)),
                       ),
                       child: const Center(
@@ -146,7 +146,7 @@ class SchedulePage extends StatelessWidget {
                           height: 48,
                           width: 35,
                           decoration: const BoxDecoration(
-                            color: Colors.indigoAccent,
+                            color: Colors.indigo,
                             borderRadius:
                                 BorderRadius.all(Radius.circular(2.5)),
                           ),
@@ -159,7 +159,7 @@ class SchedulePage extends StatelessWidget {
                           height: 48,
                           width: 35,
                           decoration: const BoxDecoration(
-                            color: Colors.indigoAccent,
+                            color: Colors.indigo,
                             borderRadius:
                                 BorderRadius.all(Radius.circular(2.5)),
                           ),
@@ -172,7 +172,7 @@ class SchedulePage extends StatelessWidget {
                           height: 48,
                           width: 35,
                           decoration: const BoxDecoration(
-                            color: Colors.indigoAccent,
+                            color: Colors.indigo,
                             borderRadius:
                                 BorderRadius.all(Radius.circular(2.5)),
                           ),
@@ -185,7 +185,7 @@ class SchedulePage extends StatelessWidget {
                           height: 48,
                           width: 35,
                           decoration: const BoxDecoration(
-                            color: Colors.indigoAccent,
+                            color: Colors.indigo,
                             borderRadius:
                                 BorderRadius.all(Radius.circular(2.5)),
                           ),
