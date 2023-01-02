@@ -1,8 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:opschooldraft1/free_block.dart';
 
-import '../model/transaction_item.dart';
+import '../model/class_item.dart';
 
 class LocalStorageService {
   static const String transactionsBoxKey = "transactionsBox";
@@ -22,20 +21,20 @@ class LocalStorageService {
   Future<void> initializeHive() async {
     await Hive.initFlutter();
     if (!Hive.isAdapterRegistered(1)) {
-      Hive.registerAdapter(TransactionItemAdapter());
+      Hive.registerAdapter(ClassItemAdapter());
     }
 
-    await Hive.openBox<TransactionItem>(transactionsBoxKey);
+    await Hive.openBox<ClassItem>(transactionsBoxKey);
     await Hive.openBox<List<dynamic>>(availablePeriodsBoxKey);
     await Hive.openBox<List<dynamic>>(scheduleMatrixBoxKey);
   }
 
-  void saveTransactionItem(TransactionItem transaction) {
-    Hive.box<TransactionItem>(transactionsBoxKey).add(transaction);
+  void saveClassItem(ClassItem transaction) {
+    Hive.box<ClassItem>(transactionsBoxKey).add(transaction);
   }
 
-  List<TransactionItem> getAllTransactions() {
-    return Hive.box<TransactionItem>(transactionsBoxKey).values.toList();
+  List<ClassItem> getAllTransactions() {
+    return Hive.box<ClassItem>(transactionsBoxKey).values.toList();
   }
 
   /* for selection to stay when you are still filling out the information 
@@ -71,7 +70,7 @@ class LocalStorageService {
         .put("periods", availablePeriods);
   }
 
-  Future<void> updateScheduleMatrix(TransactionItem newClass) {
+  Future<void> updateScheduleMatrix(ClassItem newClass) {
     List<dynamic> currentMatrix = getScheduleMatrix();
 
     List<dynamic> periods = newClass.periodCodes;
@@ -106,16 +105,15 @@ class LocalStorageService {
     return Hive.box<List<dynamic>>(scheduleMatrixBoxKey).put("matrix", matrix);
   }
 
-  Future<void> updateClassInfo(TransactionItem updatedClass, int index) {
-    return Hive.box<TransactionItem>(transactionsBoxKey)
-        .putAt(index, updatedClass);
+  Future<void> updateClassInfo(ClassItem updatedClass, int index) {
+    return Hive.box<ClassItem>(transactionsBoxKey).putAt(index, updatedClass);
   }
 
-  void deleteTransactionItem(TransactionItem classItem) {
+  void deleteClassItem(ClassItem classItem) {
     // Get a list of our transactions
-    final transactions = Hive.box<TransactionItem>(transactionsBoxKey);
+    final transactions = Hive.box<ClassItem>(transactionsBoxKey);
     // Create a map out of it
-    final Map<dynamic, TransactionItem> map = transactions.toMap();
+    final Map<dynamic, ClassItem> map = transactions.toMap();
     dynamic desiredKey;
     // For each key in the map, we check if the transaction is the same as the one we want to delete
     map.forEach((key, value) {

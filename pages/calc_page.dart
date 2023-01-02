@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../model/transaction_item.dart';
+import '../model/class_item.dart';
 import '../view_models/budget_view_model.dart';
 
 class CalcPage extends StatelessWidget {
@@ -82,7 +82,7 @@ class CalcPage extends StatelessWidget {
 }
 
 class ClassCard extends StatelessWidget {
-  final TransactionItem item;
+  final ClassItem item;
   final int index;
   const ClassCard({required this.index, required this.item, Key? key})
       : super(key: key);
@@ -101,7 +101,7 @@ class ClassCard extends StatelessWidget {
                     topRight: Radius.circular(40))),
             context: context,
             builder: (context) {
-              return Container(
+              return SizedBox(
                 height: 400,
                 child: Consumer<BudgetViewModel>(
                   builder: ((context, value, child) {
@@ -169,7 +169,7 @@ class ClassCard extends StatelessWidget {
                                         topRight: Radius.circular(40))),
                                 context: context,
                                 builder: (context) {
-                                  return Container(
+                                  return SizedBox(
                                     height: 400,
                                     child: Consumer<BudgetViewModel>(
                                       builder: ((context, value, child) {
@@ -192,7 +192,7 @@ class ClassCard extends StatelessWidget {
                                 },
                               );
                             },
-                            child: Text('Fill in information')),
+                            child: const Text('Fill in information')),
                       ),
                     )
                   : Row(
@@ -224,8 +224,8 @@ class ClassCard extends StatelessWidget {
 }
 
 class AddClassInfoSheet extends StatefulWidget {
-  final Function(TransactionItem) updatedClass;
-  final TransactionItem addInfoTo;
+  final Function(ClassItem) updatedClass;
+  final ClassItem addInfoTo;
   final int classIndex;
 
   const AddClassInfoSheet({
@@ -282,15 +282,16 @@ class _AddClassInfoSheetState extends State<AddClassInfoSheet> {
     }
   }
 
+  @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
-    TransactionItem currClass = widget.addInfoTo;
+    ClassItem currClass = widget.addInfoTo;
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Column(children: [
         Text(
           'Add Information for ${widget.addInfoTo.className}',
-          style: TextStyle(fontSize: 18),
+          style: const TextStyle(fontSize: 18),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 15.0),
@@ -417,8 +418,8 @@ class _AddClassInfoSheetState extends State<AddClassInfoSheet> {
         Consumer<BudgetViewModel>(builder: ((context, value, child) {
           return ElevatedButton(
               onPressed: () {
-                TransactionItem curr = widget.addInfoTo;
-                widget.updatedClass(TransactionItem(
+                ClassItem curr = widget.addInfoTo;
+                widget.updatedClass(ClassItem(
                   className: curr.className,
                   abbreviatedName: curr.abbreviatedName,
                   periodCodes: curr.periodCodes,

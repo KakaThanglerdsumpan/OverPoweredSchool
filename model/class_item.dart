@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-part 'transaction_item.g.dart';
+
+part 'class_item.g.dart'; // Make sure to include this
 
 @HiveType(typeId: 1)
-class TransactionItem {
+class ClassItem {
   @HiveField(0)
   String className;
   @HiveField(1)
@@ -20,7 +21,7 @@ class TransactionItem {
   String credit;
   @HiveField(7)
   String grade;
-  TransactionItem(
+  ClassItem(
       {required this.className,
       required this.periods,
       required this.periodCodes,

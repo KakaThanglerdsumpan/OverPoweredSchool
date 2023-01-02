@@ -1,22 +1,22 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'transaction_item.dart';
+part of 'class_item.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class TransactionItemAdapter extends TypeAdapter<TransactionItem> {
+class ClassItemAdapter extends TypeAdapter<ClassItem> {
   @override
   final int typeId = 1;
 
   @override
-  TransactionItem read(BinaryReader reader) {
+  ClassItem read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return TransactionItem(
+    return ClassItem(
       className: fields[0] as String,
       periods: (fields[1] as List).cast<String>(),
       periodCodes: (fields[2] as List).cast<dynamic>(),
@@ -29,7 +29,7 @@ class TransactionItemAdapter extends TypeAdapter<TransactionItem> {
   }
 
   @override
-  void write(BinaryWriter writer, TransactionItem obj) {
+  void write(BinaryWriter writer, ClassItem obj) {
     writer
       ..writeByte(8)
       ..writeByte(0)
@@ -56,7 +56,7 @@ class TransactionItemAdapter extends TypeAdapter<TransactionItem> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is TransactionItemAdapter &&
+      other is ClassItemAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

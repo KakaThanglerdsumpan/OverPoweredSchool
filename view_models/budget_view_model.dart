@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
-import '../model/transaction_item.dart';
+import '../model/class_item.dart';
 import '../services/local_storage_service.dart';
 
 class BudgetViewModel extends ChangeNotifier {
   List<dynamic> getMatrix() => LocalStorageService().getScheduleMatrix();
   List<dynamic> getAvailablePeriods() =>
       LocalStorageService().getAvailablePeriods();
-  List<TransactionItem> get items => LocalStorageService().getAllTransactions();
+  List<ClassItem> get items => LocalStorageService().getAllTransactions();
 
-  void addItem(TransactionItem item) {
-    LocalStorageService().saveTransactionItem(item);
+  void addItem(ClassItem item) {
+    LocalStorageService().saveClassItem(item);
     LocalStorageService().updateScheduleMatrix(item);
-    print(item.periodCodes);
     notifyListeners();
   }
 
-  void editClassInfo(TransactionItem updatedClass, int index) {
+  void editClassInfo(ClassItem updatedClass, int index) {
     LocalStorageService().updateClassInfo(updatedClass, index);
-    print(updatedClass.grade);
     notifyListeners();
   }
 
@@ -26,10 +24,10 @@ class BudgetViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void deleteItem(TransactionItem item) {
+  void deleteItem(ClassItem item) {
     final localStorage = LocalStorageService();
 
-    localStorage.deleteTransactionItem(item);
+    localStorage.deleteClassItem(item);
 
     notifyListeners();
   }

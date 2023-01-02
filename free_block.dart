@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:opschooldraft1/model/transaction_item.dart';
+import 'package:opschooldraft1/model/class_item.dart';
 
-TransactionItem freeBlock = TransactionItem(
+ClassItem freeBlock = ClassItem(
   className: 'free',
   periods: [''],
   periodCodes: [],

@@ -1,14 +1,8 @@
-import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:hive/hive.dart';
-import 'package:opschooldraft1/main.dart';
-import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
 
-import '../model/transaction_item.dart';
-import '../services/period_selection_service.dart';
+import '../model/class_item.dart';
 import '../view_models/budget_view_model.dart';
 
 class HomePage extends StatelessWidget {
@@ -29,7 +23,7 @@ class HomePage extends StatelessWidget {
                     topRight: Radius.circular(40))),
             context: context,
             builder: (context) {
-              return Container(
+              return SizedBox(
                 height: MediaQuery.of(context).size.height * 0.75,
                 child: Consumer<BudgetViewModel>(
                   builder: ((context, value, child) {
@@ -110,7 +104,7 @@ class HomePage extends StatelessWidget {
 }
 
 class TransactionCard extends StatelessWidget {
-  final TransactionItem item;
+  final ClassItem item;
   const TransactionCard({required this.item, Key? key}) : super(key: key);
 
   @override
@@ -183,7 +177,7 @@ class TransactionCard extends StatelessWidget {
 }
 
 class AddTransactionDialog extends StatefulWidget {
-  final Function(TransactionItem) itemToAdd;
+  final Function(ClassItem) itemToAdd;
   final Function(List<dynamic>) periodsToUpdate;
 
   const AddTransactionDialog({
@@ -217,7 +211,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
     Colors.yellow,
     Colors.green,
     Colors.blue,
-    Colors.indigo,
+    Colors.indigoAccent,
     Colors.purple,
     Colors.pink,
   ];
@@ -249,7 +243,6 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
 
   @override
   Widget build(BuildContext context) {
-    Size screenSize = MediaQuery.of(context).size;
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -427,7 +420,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                 }
 
                 widget.itemToAdd(
-                  TransactionItem(
+                  ClassItem(
                     className: classNameController.text,
                     periods: selectedPeriods,
                     periodCodes: selectedPeriodCodes,
@@ -445,150 +438,6 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class SelectPeriod extends StatefulWidget {
-  final Function(List<String>) periodsToAdd;
-  final Function(List<dynamic>) periodCodesToAdd;
-  final Function(List<dynamic>) periodSelections;
-  final List<dynamic> isPeriodSelectedTMP;
-
-  SelectPeriod({
-    required this.periodsToAdd,
-    required this.periodCodesToAdd,
-    required this.periodSelections,
-    this.isPeriodSelectedTMP = const [
-      [false, false, false, false, false],
-      [false, false, false, false, false],
-      [false, false, false, false, false],
-      [false, false, false, false, false],
-    ],
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  State<SelectPeriod> createState() => _SelectPeriodState();
-}
-
-class _SelectPeriodState extends State<SelectPeriod> {
-  List<dynamic> isPeriodSelected = [
-    [false, false, false, false, false],
-    [false, false, false, false, false],
-    [false, false, false, false, false],
-    [false, false, false, false, false],
-  ];
-
-  List<String> selectedPeriods = [];
-  @override
-  void initState() {
-    super.initState();
-    isPeriodSelected = widget.isPeriodSelectedTMP;
-  }
-
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          width: 390,
-          height: 250,
-          child: Consumer<BudgetViewModel>(builder: (context, value, child) {
-            List<dynamic> unavailablePeriods = value.getAvailablePeriods();
-            return ListView.builder(
-                shrinkWrap: true,
-                itemCount: 4,
-                itemBuilder: (context, i) {
-                  String day = '';
-
-                  if (i == 0) {
-                    day = 'A';
-                  } else if (i == 1) {
-                    day = 'B';
-                  } else if (i == 2) {
-                    day = 'C';
-                  } else if (i == 3) {
-                    day = 'D';
-                  }
-
-                  return Column(
-                    children: [
-                      const SizedBox(height: 10),
-                      SizedBox(
-                        width: 390,
-                        height: 48,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                shrinkWrap: true,
-                                itemCount: 5,
-                                itemBuilder: (context, j) {
-                                  return OutlinedButton(
-                                      onPressed: unavailablePeriods[i][j]
-                                          ? null
-                                          : () {
-                                              setState(() {
-                                                isPeriodSelected[i][j] =
-                                                    !isPeriodSelected[i][j];
-                                              });
-                                            },
-                                      style: OutlinedButton.styleFrom(
-                                          backgroundColor: unavailablePeriods[i]
-                                                  [j]
-                                              ? Colors.grey[400]
-                                              : (isPeriodSelected[i][j]
-                                                  ? Colors.indigoAccent
-                                                  : Colors.white)),
-                                      child: Text(
-                                        '$day${j + 1}',
-                                        style: TextStyle(
-                                            color: unavailablePeriods[i][j]
-                                                ? Colors.white
-                                                : (isPeriodSelected[i][j]
-                                                    ? Colors.white
-                                                    : Colors.indigo)),
-                                      ));
-                                }),
-                          ],
-                        ),
-                      ),
-                    ],
-                  );
-                });
-          }),
-        ),
-        ElevatedButton(
-            onPressed: () {
-              List<dynamic> selectedPeriodCodes = [];
-              selectedPeriods.clear();
-
-              for (int i = 0; i < 4; i++) {
-                String day = '';
-                if (i == 0) {
-                  day = 'A';
-                } else if (i == 1) {
-                  day = 'B';
-                } else if (i == 2) {
-                  day = 'C';
-                } else if (i == 3) {
-                  day = 'D';
-                }
-                for (int j = 0; j < 5; j++) {
-                  if (isPeriodSelected[i][j]) {
-                    selectedPeriods.add('$day${j + 1}');
-                    selectedPeriodCodes.add([i, j]);
-                  }
-                }
-              }
-
-              widget.periodsToAdd(selectedPeriods);
-              widget.periodCodesToAdd(selectedPeriodCodes);
-              widget.periodSelections(isPeriodSelected);
-            },
-            child: const Text("Done"))
-      ],
     );
   }
 }

@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:opschooldraft1/view_models/budget_view_model.dart';
 import 'package:provider/provider.dart';
@@ -219,7 +217,6 @@ class SchedulePage extends StatelessWidget {
                                           shrinkWrap: true,
                                           itemCount: 5,
                                           itemBuilder: (context, j) {
-                                            print(matrix[i][j].abbreviatedName);
                                             return Container(
                                               width: 370 / 5,
                                               decoration: BoxDecoration(

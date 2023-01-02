@@ -4,8 +4,6 @@ import 'pages/home_page.dart';
 import 'pages/schedule_page.dart';
 import 'package:provider/provider.dart';
 
-import 'main.dart';
-import 'view_models/budget_view_model.dart';
 import 'services/theme_service.dart';
 
 class Home extends StatefulWidget {
