@@ -2,16 +2,47 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../model/class_item.dart';
+import '../services/theme_service.dart';
 import '../view_models/budget_view_model.dart';
 
-class CalcPage extends StatelessWidget {
+class CalcPage extends StatefulWidget {
   const CalcPage({Key? key}) : super(key: key);
 
   @override
+  State<CalcPage> createState() => _CalcPageState();
+}
+
+class _CalcPageState extends State<CalcPage> {
+  @override
   Widget build(BuildContext context) {
+    final themeService = Provider.of<ThemeService>(context);
+
     final screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 80,
+        title: const Text(
+          "OverPowered School",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+        ),
+        centerTitle: false,
+        actions: [
+          IconButton(
+            onPressed: () {
+              themeService.hideGrades = !themeService.hideGrades;
+            },
+            icon: Icon(
+                themeService.hideGrades ? Icons.blinds : Icons.blinds_closed),
+          ),
+          IconButton(
+            onPressed: () {
+              themeService.darkTheme = !themeService.darkTheme;
+            },
+            icon: Icon(themeService.darkTheme ? Icons.sunny : Icons.dark_mode),
+          ),
+        ],
+      ),
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
@@ -23,6 +54,205 @@ class CalcPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "GPA",
+                            style: TextStyle(
+                                fontSize: 25, fontWeight: FontWeight.w800),
+                          ),
+                          const SizedBox(height: 5.5),
+                          GestureDetector(
+                            onTap: () {
+                              themeService.hideGrades =
+                                  !themeService.hideGrades;
+                            },
+                            child: SizedBox(
+                              child: Stack(
+                                alignment: Alignment.bottomRight,
+                                children: [
+                                  Container(
+                                    width:
+                                        MediaQuery.of(context).size.width - 30,
+                                    padding: const EdgeInsets.fromLTRB(
+                                        10, 5, 10, 10),
+                                    decoration: BoxDecoration(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .background,
+                                        boxShadow: [
+                                          BoxShadow(
+                                              spreadRadius: 2.5,
+                                              blurRadius: 2.5,
+                                              color:
+                                                  Colors.black.withOpacity(0.1))
+                                        ],
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: Consumer<BudgetViewModel>(
+                                        builder: (context, value, child) {
+                                      return Text(
+                                        value.updateGPA()[1].toStringAsFixed(2),
+                                        style: const TextStyle(
+                                            fontSize: 100,
+                                            fontWeight: FontWeight.w700),
+                                      );
+                                    }),
+                                  ),
+                                  const SizedBox(
+                                    width: 2,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 10),
+                                        decoration: BoxDecoration(
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  spreadRadius: 1,
+                                                  blurRadius: 1,
+                                                  color: Colors.black
+                                                      .withOpacity(0.1))
+                                            ],
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .background,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Consumer<BudgetViewModel>(builder:
+                                                (context, value, child) {
+                                              return Text(
+                                                value
+                                                    .updateGPA()[2]
+                                                    .toStringAsFixed(2),
+                                                style: const TextStyle(
+                                                    fontSize: 30,
+                                                    fontWeight:
+                                                        FontWeight.w700),
+                                              );
+                                            }),
+                                            const Text(
+                                              'Total Credits',
+                                              style: TextStyle(fontSize: 10),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 10),
+                                        decoration: BoxDecoration(
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  spreadRadius: 1,
+                                                  blurRadius: 1,
+                                                  color: Colors.black
+                                                      .withOpacity(0.1))
+                                            ],
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .background,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Consumer<BudgetViewModel>(builder:
+                                                (context, value, child) {
+                                              return Text(
+                                                value
+                                                    .updateGPA()[0]
+                                                    .toStringAsFixed(2),
+                                                style: const TextStyle(
+                                                    fontSize: 30,
+                                                    fontWeight:
+                                                        FontWeight.w700),
+                                              );
+                                            }),
+                                            const Text(
+                                              'Unweighted GPA',
+                                              style: TextStyle(fontSize: 10),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  themeService.hideGrades
+                                      ? Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width -
+                                              30,
+                                          height: 136,
+                                          decoration: BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                    spreadRadius: 2.5,
+                                                    blurRadius: 2.5,
+                                                    color: Colors.black
+                                                        .withOpacity(0.1))
+                                              ],
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .background,
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          child:
+                                              const Icon(Icons.blinds_closed),
+                                        )
+                                      : Container(),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      // Column(
+                      //   children: [
+                      //     const Text(
+                      //       "Total credits",
+                      //       style: TextStyle(
+                      //           fontSize: 16, fontWeight: FontWeight.w800),
+                      //     ),
+                      //     Container(
+                      //       width: 105,
+                      //       height: 87,
+                      //       padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
+                      //       decoration: BoxDecoration(
+                      //           boxShadow: [
+                      //             BoxShadow(
+                      //                 spreadRadius: 2.5,
+                      //                 blurRadius: 2.5,
+                      //                 color: Colors.black.withOpacity(0.1))
+                      //           ],
+                      //           color: Colors.white,
+                      //           borderRadius: BorderRadius.circular(10)),
+                      //       child: Consumer<BudgetViewModel>(
+                      //           builder: (context, value, child) {
+                      //         return Text(
+                      //           value.updateGPA()[2].toStringAsFixed(2),
+                      //           style: const TextStyle(
+                      //               fontSize: 30, fontWeight: FontWeight.w700),
+                      //         );
+                      //       }),
+                      //     ),
+                      //   ],
+                      // ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: const [
@@ -67,6 +297,7 @@ class CalcPage extends StatelessWidget {
                             return ClassCard(
                               item: value.items[index],
                               index: index,
+                              hide: themeService.hideGrades,
                             );
                           });
                     }),
@@ -84,7 +315,9 @@ class CalcPage extends StatelessWidget {
 class ClassCard extends StatelessWidget {
   final ClassItem item;
   final int index;
-  const ClassCard({required this.index, required this.item, Key? key})
+  final bool hide;
+  const ClassCard(
+      {required this.index, required this.item, required this.hide, Key? key})
       : super(key: key);
 
   @override
@@ -105,16 +338,15 @@ class ClassCard extends StatelessWidget {
                 height: 400,
                 child: Consumer<BudgetViewModel>(
                   builder: ((context, value, child) {
+                    final budgetService =
+                        Provider.of<BudgetViewModel>(context, listen: false);
                     return AddClassInfoSheet(
                       classIndex: index,
                       addInfoTo: item,
                       updatedClass: (updatedClass) {
-                        final budgetService = Provider.of<BudgetViewModel>(
-                            context,
-                            listen: false);
-
                         budgetService.editClassInfo(updatedClass, index);
                       },
+                      updateGPA: () => budgetService.updateGPA(),
                     );
                   }),
                 ),
@@ -128,10 +360,9 @@ class ClassCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(15.0),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(.05),
-                offset: const Offset(0, 25),
-                blurRadius: 50,
-              )
+                  spreadRadius: 1.2,
+                  blurRadius: 1.2,
+                  color: Colors.black.withOpacity(0.05))
             ],
           ),
           padding: const EdgeInsets.all(15.0),
@@ -173,18 +404,18 @@ class ClassCard extends StatelessWidget {
                                     height: 400,
                                     child: Consumer<BudgetViewModel>(
                                       builder: ((context, value, child) {
+                                        final budgetService =
+                                            Provider.of<BudgetViewModel>(
+                                                context,
+                                                listen: false);
                                         return AddClassInfoSheet(
                                           classIndex: index,
                                           addInfoTo: item,
-                                          updatedClass: (updatedClass) {
-                                            final budgetService =
-                                                Provider.of<BudgetViewModel>(
-                                                    context,
-                                                    listen: false);
-
-                                            budgetService.editClassInfo(
-                                                updatedClass, index);
-                                          },
+                                          updatedClass: (updatedClass) =>
+                                              budgetService.editClassInfo(
+                                                  updatedClass, index),
+                                          updateGPA: () =>
+                                              budgetService.updateGPA(),
                                         );
                                       }),
                                     ),
@@ -209,10 +440,12 @@ class ClassCard extends StatelessWidget {
                         const SizedBox(width: 20),
                         SizedBox(
                             width: 43,
-                            child: Text(
-                              item.grade,
-                              textAlign: TextAlign.center,
-                            )),
+                            child: hide
+                                ? const Icon(Icons.blinds_closed, size: 18)
+                                : Text(
+                                    item.grade,
+                                    textAlign: TextAlign.center,
+                                  )),
                       ],
                     ),
             ],
@@ -225,12 +458,14 @@ class ClassCard extends StatelessWidget {
 
 class AddClassInfoSheet extends StatefulWidget {
   final Function(ClassItem) updatedClass;
+  final Function() updateGPA;
   final ClassItem addInfoTo;
   final int classIndex;
 
   const AddClassInfoSheet({
-    required this.addInfoTo,
     required this.updatedClass,
+    required this.updateGPA,
+    required this.addInfoTo,
     required this.classIndex,
     Key? key,
   }) : super(key: key);
@@ -429,6 +664,9 @@ class _AddClassInfoSheetState extends State<AddClassInfoSheet> {
                   credit: selectedCredit,
                   grade: selectedGrade,
                 ));
+
+                widget.updateGPA();
+
                 Navigator.pop(context);
               },
               child: const Text("Add"));

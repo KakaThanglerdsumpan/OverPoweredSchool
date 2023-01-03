@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../model/class_item.dart';
+import '../services/theme_service.dart';
 import '../view_models/budget_view_model.dart';
 
 class HomePage extends StatelessWidget {
@@ -11,8 +12,25 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
+    final themeService = Provider.of<ThemeService>(context, listen: false);
 
     return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 80,
+        title: const Text(
+          "OverPowered School",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+        ),
+        centerTitle: false,
+        actions: [
+          IconButton(
+            onPressed: () {
+              themeService.darkTheme = !themeService.darkTheme;
+            },
+            icon: Icon(themeService.darkTheme ? Icons.sunny : Icons.dark_mode),
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showModalBottomSheet<dynamic>(
@@ -145,10 +163,9 @@ class TransactionCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(15.0),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(.05),
-                offset: const Offset(0, 25),
-                blurRadius: 50,
-              )
+                  spreadRadius: 1.2,
+                  blurRadius: 1.2,
+                  color: Colors.black.withOpacity(0.05))
             ],
           ),
           padding: const EdgeInsets.all(15.0),
@@ -208,12 +225,13 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
   final List<Color> colors = [
     Colors.red,
     Colors.orange,
-    Colors.yellow,
     Colors.green,
+    Colors.teal,
     Colors.blue,
     Colors.indigoAccent,
     Colors.purple,
     Colors.pink,
+    Colors.grey[400]!,
   ];
 
   final List<int> colorIndices = [0, 1, 2, 3, 4, 5, 6, 7];
@@ -358,7 +376,6 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                   ],
                 ),
                 Row(
-                  // mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text('Color:'),
                     const SizedBox(width: 5),

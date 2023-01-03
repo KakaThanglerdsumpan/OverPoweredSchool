@@ -4,9 +4,11 @@ import 'package:opschooldraft1/free_block.dart';
 import '../model/class_item.dart';
 
 class LocalStorageService {
+//---- Declare box keys ----{{
   static const String transactionsBoxKey = "transactionsBox";
   static const String availablePeriodsBoxKey = "availablePeriodsBox";
   static const String scheduleMatrixBoxKey = "scheduleMatrixBox";
+//---- Declare box keys ----}}
 
   static final LocalStorageService _instance = LocalStorageService._internal();
 
@@ -18,6 +20,7 @@ class LocalStorageService {
     initializeHive();
   }
 
+//---- Initialize Hive ----{{
   Future<void> initializeHive() async {
     await Hive.initFlutter();
     if (!Hive.isAdapterRegistered(1)) {
@@ -28,17 +31,21 @@ class LocalStorageService {
     await Hive.openBox<List<dynamic>>(availablePeriodsBoxKey);
     await Hive.openBox<List<dynamic>>(scheduleMatrixBoxKey);
   }
+//---- Initialize Hive ---}}
 
+//---- Handling Class Items ----{{
+  // add new class to box
   void saveClassItem(ClassItem transaction) {
     Hive.box<ClassItem>(transactionsBoxKey).add(transaction);
   }
 
+  // get list of classes currently in box
   List<ClassItem> getAllTransactions() {
     return Hive.box<ClassItem>(transactionsBoxKey).values.toList();
   }
+//---- Handling Class Items ----}}
 
-  /* for selection to stay when you are still filling out the information 
-  for a class but haven't added the class yet */
+//---- Handling Schedule ----{{
   List<dynamic> getAvailablePeriods() {
     return Hive.box<List<dynamic>>(availablePeriodsBoxKey).get("periods") ??
         [
@@ -104,6 +111,7 @@ class LocalStorageService {
     }
     return Hive.box<List<dynamic>>(scheduleMatrixBoxKey).put("matrix", matrix);
   }
+  //---- Handling Schedule ----}}
 
   Future<void> updateClassInfo(ClassItem updatedClass, int index) {
     return Hive.box<ClassItem>(transactionsBoxKey).putAt(index, updatedClass);

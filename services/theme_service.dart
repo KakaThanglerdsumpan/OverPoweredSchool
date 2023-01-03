@@ -6,8 +6,10 @@ class ThemeService with ChangeNotifier {
   ThemeService(this.sharedPreferences);
 
   static const darkThemeKey = "dark_theme";
+  static const hideGradesKey = "hide_grades";
 
-  bool _darkTheme = true;
+  bool _darkTheme = false;
+  bool _hideGrades = false;
 
   set darkTheme(bool value) {
     _darkTheme = value;
@@ -15,7 +17,17 @@ class ThemeService with ChangeNotifier {
     notifyListeners();
   }
 
+  set hideGrades(bool value) {
+    _hideGrades = value;
+    sharedPreferences.setBool(hideGradesKey, value);
+    notifyListeners();
+  }
+
   bool get darkTheme {
     return sharedPreferences.getBool(darkThemeKey) ?? _darkTheme;
+  }
+
+  bool get hideGrades {
+    return sharedPreferences.getBool(hideGradesKey) ?? _hideGrades;
   }
 }

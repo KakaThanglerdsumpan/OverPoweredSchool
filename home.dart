@@ -28,17 +28,14 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    final themeService = Provider.of<ThemeService>(context, listen: false);
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("OverPowered School"),
-        leading: IconButton(
-          onPressed: () {
-            themeService.darkTheme = !themeService.darkTheme;
-          },
-          icon: Icon(themeService.darkTheme ? Icons.sunny : Icons.dark_mode),
-        ),
-      ),
+      // appBar: AppBar(
+      //   centerTitle: false,
+      //   title: const Text(
+      //     "OverPowered School",
+      //     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+      //   ),
+      // ),
       body: pages[_currentPageIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: bottomNavItems,

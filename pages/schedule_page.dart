@@ -2,16 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:opschooldraft1/view_models/budget_view_model.dart';
 import 'package:provider/provider.dart';
 
+import '../services/theme_service.dart';
+
 class SchedulePage extends StatelessWidget {
   const SchedulePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final themeService = Provider.of<ThemeService>(context, listen: false);
+    final screenSize = MediaQuery.of(context).size;
+    final blockWidth = (screenSize.width - 35 - 10 - 10 - 10) / 5;
+
     final List<Color> colors = [
       Colors.red,
       Colors.orange,
-      Colors.yellow,
       Colors.green,
+      Colors.teal,
       Colors.blue,
       Colors.indigoAccent,
       Colors.purple,
@@ -19,6 +25,22 @@ class SchedulePage extends StatelessWidget {
       Colors.grey[400]!,
     ];
     return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 80,
+        title: const Text(
+          "OverPowered School",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+        ),
+        centerTitle: false,
+        actions: [
+          IconButton(
+            onPressed: () {
+              themeService.darkTheme = !themeService.darkTheme;
+            },
+            icon: Icon(themeService.darkTheme ? Icons.sunny : Icons.dark_mode),
+          ),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: SingleChildScrollView(
@@ -26,13 +48,13 @@ class SchedulePage extends StatelessWidget {
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
                     const SizedBox(width: 37),
                     Container(
-                      width: 370,
+                      width: (screenSize.width - 35 - 10 - 12),
                       height: 30,
                       decoration: const BoxDecoration(
                           color: Colors.indigo,
@@ -72,7 +94,7 @@ class SchedulePage extends StatelessWidget {
                     ),
                     const SizedBox(width: 2),
                     Container(
-                      width: 362 / 5,
+                      width: blockWidth,
                       height: 25,
                       decoration: const BoxDecoration(
                         color: Colors.indigo,
@@ -84,7 +106,7 @@ class SchedulePage extends StatelessWidget {
                     ),
                     const SizedBox(width: 2),
                     Container(
-                      width: 362 / 5,
+                      width: blockWidth,
                       height: 25,
                       decoration: const BoxDecoration(
                         color: Colors.indigo,
@@ -96,7 +118,7 @@ class SchedulePage extends StatelessWidget {
                     ),
                     const SizedBox(width: 2),
                     Container(
-                      width: 362 / 5,
+                      width: blockWidth,
                       height: 25,
                       decoration: const BoxDecoration(
                         color: Colors.indigo,
@@ -108,7 +130,7 @@ class SchedulePage extends StatelessWidget {
                     ),
                     const SizedBox(width: 2),
                     Container(
-                      width: 362 / 5,
+                      width: blockWidth,
                       height: 25,
                       decoration: const BoxDecoration(
                         color: Colors.indigo,
@@ -120,7 +142,7 @@ class SchedulePage extends StatelessWidget {
                     ),
                     const SizedBox(width: 2),
                     Container(
-                      width: 362 / 5,
+                      width: blockWidth,
                       height: 25,
                       decoration: const BoxDecoration(
                         color: Colors.indigo,
@@ -217,31 +239,31 @@ class SchedulePage extends StatelessWidget {
                                           shrinkWrap: true,
                                           itemCount: 5,
                                           itemBuilder: (context, j) {
-                                            return Container(
-                                              width: 370 / 5,
-                                              decoration: BoxDecoration(
-                                                  color: colors[
-                                                      matrix[i][j].colorIndex],
-                                                  border: Border.all(
-                                                      color:
-                                                          const Color.fromARGB(
-                                                              255,
-                                                              234,
-                                                              234,
-                                                              234)),
-                                                  borderRadius:
-                                                      const BorderRadius.all(
-                                                          Radius.circular(
-                                                              5.0))),
-                                              child: Center(
-                                                child: Text(
-                                                  matrix[i][j].abbreviatedName,
-                                                  style: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold),
+                                            return Row(
+                                              children: [
+                                                Container(
+                                                  width: blockWidth,
+                                                  decoration: BoxDecoration(
+                                                      color: colors[matrix[i][j]
+                                                          .colorIndex],
+                                                      borderRadius:
+                                                          const BorderRadius
+                                                                  .all(
+                                                              Radius.circular(
+                                                                  5.0))),
+                                                  child: Center(
+                                                    child: Text(
+                                                      matrix[i][j]
+                                                          .abbreviatedName,
+                                                      style: const TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
+                                                const SizedBox(width: 2),
+                                              ],
                                             );
                                           }),
                                     ],
