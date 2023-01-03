@@ -88,8 +88,14 @@ class _CalcPageState extends State<CalcPage> {
                                           BoxShadow(
                                               spreadRadius: 2.5,
                                               blurRadius: 2.5,
-                                              color:
-                                                  Colors.black.withOpacity(0.1))
+                                              color: Colors.black.withOpacity(
+                                                  Theme.of(context)
+                                                              .colorScheme
+                                                              .background ==
+                                                          Color.fromRGBO(
+                                                              27, 27, 31, 1)
+                                                      ? 0.6
+                                                      : 0.1))
                                         ],
                                         borderRadius:
                                             BorderRadius.circular(10)),
@@ -118,7 +124,14 @@ class _CalcPageState extends State<CalcPage> {
                                                   spreadRadius: 1,
                                                   blurRadius: 1,
                                                   color: Colors.black
-                                                      .withOpacity(0.1))
+                                                      .withOpacity(Theme.of(
+                                                                      context)
+                                                                  .colorScheme
+                                                                  .background ==
+                                                              Color.fromRGBO(
+                                                                  27, 27, 31, 1)
+                                                          ? 0.5
+                                                          : 0.1))
                                             ],
                                             color: Theme.of(context)
                                                 .colorScheme
@@ -157,7 +170,14 @@ class _CalcPageState extends State<CalcPage> {
                                                   spreadRadius: 1,
                                                   blurRadius: 1,
                                                   color: Colors.black
-                                                      .withOpacity(0.1))
+                                                      .withOpacity(Theme.of(
+                                                                      context)
+                                                                  .colorScheme
+                                                                  .background ==
+                                                              Color.fromRGBO(
+                                                                  27, 27, 31, 1)
+                                                          ? 0.5
+                                                          : 0.1))
                                             ],
                                             color: Theme.of(context)
                                                 .colorScheme
@@ -219,37 +239,6 @@ class _CalcPageState extends State<CalcPage> {
                           ),
                         ],
                       ),
-                      // Column(
-                      //   children: [
-                      //     const Text(
-                      //       "Total credits",
-                      //       style: TextStyle(
-                      //           fontSize: 16, fontWeight: FontWeight.w800),
-                      //     ),
-                      //     Container(
-                      //       width: 105,
-                      //       height: 87,
-                      //       padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
-                      //       decoration: BoxDecoration(
-                      //           boxShadow: [
-                      //             BoxShadow(
-                      //                 spreadRadius: 2.5,
-                      //                 blurRadius: 2.5,
-                      //                 color: Colors.black.withOpacity(0.1))
-                      //           ],
-                      //           color: Colors.white,
-                      //           borderRadius: BorderRadius.circular(10)),
-                      //       child: Consumer<BudgetViewModel>(
-                      //           builder: (context, value, child) {
-                      //         return Text(
-                      //           value.updateGPA()[2].toStringAsFixed(2),
-                      //           style: const TextStyle(
-                      //               fontSize: 30, fontWeight: FontWeight.w700),
-                      //         );
-                      //       }),
-                      //     ),
-                      //   ],
-                      // ),
                     ],
                   ),
                   const SizedBox(height: 20),
@@ -625,20 +614,26 @@ class _AddClassInfoSheetState extends State<AddClassInfoSheet> {
                   children: [
                     Container(
                       height: 40,
-                      decoration: const BoxDecoration(boxShadow: [
+                      decoration: BoxDecoration(boxShadow: [
                         BoxShadow(
-                          color: Color.fromRGBO(250, 250, 250, 1),
                           offset: Offset(0, -10),
                           blurRadius: 10,
+                          color: Theme.of(context).colorScheme.background ==
+                                  Color.fromRGBO(27, 27, 31, 1)
+                              ? Color.fromRGBO(48, 48, 48, 1)
+                              : Color.fromRGBO(250, 250, 250, 1),
                         )
                       ]),
                     ),
                     Container(
                       height: 40,
-                      decoration: const BoxDecoration(boxShadow: [
+                      decoration: BoxDecoration(boxShadow: [
                         BoxShadow(
-                          color: Color.fromRGBO(250, 250, 250, 1),
-                          offset: Offset(0, 10),
+                          color: Theme.of(context).colorScheme.background ==
+                                  Color.fromRGBO(27, 27, 31, 1)
+                              ? Color.fromRGBO(48, 48, 48, 1)
+                              : Color.fromRGBO(250, 250, 250, 1),
+                          offset: const Offset(0, 10),
                           blurRadius: 10,
                         )
                       ]),
