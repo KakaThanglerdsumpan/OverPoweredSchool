@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'pages/calc_page.dart';
 import 'pages/home_page.dart';
 import 'pages/schedule_page.dart';
-import 'package:provider/provider.dart';
-
-import 'services/theme_service.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);

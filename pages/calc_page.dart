@@ -92,7 +92,7 @@ class _CalcPageState extends State<CalcPage> {
                                                   Theme.of(context)
                                                               .colorScheme
                                                               .background ==
-                                                          Color.fromRGBO(
+                                                          const Color.fromRGBO(
                                                               27, 27, 31, 1)
                                                       ? 0.6
                                                       : 0.1))
@@ -128,7 +128,8 @@ class _CalcPageState extends State<CalcPage> {
                                                                       context)
                                                                   .colorScheme
                                                                   .background ==
-                                                              Color.fromRGBO(
+                                                              const Color
+                                                                      .fromRGBO(
                                                                   27, 27, 31, 1)
                                                           ? 0.5
                                                           : 0.1))
@@ -174,7 +175,8 @@ class _CalcPageState extends State<CalcPage> {
                                                                       context)
                                                                   .colorScheme
                                                                   .background ==
-                                                              Color.fromRGBO(
+                                                              const Color
+                                                                      .fromRGBO(
                                                                   27, 27, 31, 1)
                                                           ? 0.5
                                                           : 0.1))
@@ -616,12 +618,12 @@ class _AddClassInfoSheetState extends State<AddClassInfoSheet> {
                       height: 40,
                       decoration: BoxDecoration(boxShadow: [
                         BoxShadow(
-                          offset: Offset(0, -10),
+                          offset: const Offset(0, -10),
                           blurRadius: 10,
                           color: Theme.of(context).colorScheme.background ==
-                                  Color.fromRGBO(27, 27, 31, 1)
-                              ? Color.fromRGBO(48, 48, 48, 1)
-                              : Color.fromRGBO(250, 250, 250, 1),
+                                  const Color.fromRGBO(27, 27, 31, 1)
+                              ? const Color.fromRGBO(48, 48, 48, 1)
+                              : const Color.fromRGBO(250, 250, 250, 1),
                         )
                       ]),
                     ),
@@ -630,9 +632,9 @@ class _AddClassInfoSheetState extends State<AddClassInfoSheet> {
                       decoration: BoxDecoration(boxShadow: [
                         BoxShadow(
                           color: Theme.of(context).colorScheme.background ==
-                                  Color.fromRGBO(27, 27, 31, 1)
-                              ? Color.fromRGBO(48, 48, 48, 1)
-                              : Color.fromRGBO(250, 250, 250, 1),
+                                  const Color.fromRGBO(27, 27, 31, 1)
+                              ? const Color.fromRGBO(48, 48, 48, 1)
+                              : const Color.fromRGBO(250, 250, 250, 1),
                           offset: const Offset(0, 10),
                           blurRadius: 10,
                         )
