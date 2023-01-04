@@ -19,8 +19,19 @@ class BudgetViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateClass(ClassItem updatedClass, ClassItem currClass, int index) {
+    LocalStorageService().updateClassInfo(updatedClass, index);
+    LocalStorageService()
+        .updateAvailablePeriodsAfterDelete(currClass.periodCodes);
+    LocalStorageService().updateMatrixAfterDelete(currClass.periodCodes);
+    LocalStorageService().updateAvailablePeriods(updatedClass.periodCodes);
+    LocalStorageService().updateScheduleMatrix(updatedClass);
+    notifyListeners();
+  }
+
   void addSelectedPeriods(List<dynamic> periods) {
     LocalStorageService().updateAvailablePeriods(periods);
+
     notifyListeners();
   }
 

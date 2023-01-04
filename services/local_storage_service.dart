@@ -35,13 +35,41 @@ class LocalStorageService {
 
 //---- Handling Class Items ----{{
   // add new class to box
-  void saveClassItem(ClassItem transaction) {
-    Hive.box<ClassItem>(transactionsBoxKey).add(transaction);
+  Future<void> saveClassItem(ClassItem addedClass) async {
+    int key = await Hive.box<ClassItem>(transactionsBoxKey).add(addedClass);
+    int index =
+        Hive.box<ClassItem>(transactionsBoxKey).values.toList().length - 1;
+
+    return Hive.box<ClassItem>(transactionsBoxKey).putAt(
+        index,
+        ClassItem(
+          className: addedClass.className,
+          abbreviatedName: addedClass.abbreviatedName,
+          periods: addedClass.periods,
+          periodCodes: addedClass.periodCodes,
+          colorIndex: addedClass.colorIndex,
+          itemKey: key,
+        ));
   }
 
   // get list of classes currently in box
   List<ClassItem> getAllTransactions() {
     return Hive.box<ClassItem>(transactionsBoxKey).values.toList();
+  }
+
+  // edit class information
+  Future<void> updateClassInfo(ClassItem updatedClass, int index) {
+    return Hive.box<ClassItem>(transactionsBoxKey).putAt(index, updatedClass);
+  }
+
+  void deleteClassItem(ClassItem classItem) {
+    // Get a list of our transactions
+    final transactions = Hive.box<ClassItem>(transactionsBoxKey);
+
+    updateAvailablePeriodsAfterDelete(classItem.periodCodes);
+    updateMatrixAfterDelete(classItem.periodCodes);
+
+    transactions.delete(classItem.itemKey);
   }
 //---- Handling Class Items ----}}
 
@@ -113,24 +141,4 @@ class LocalStorageService {
   }
   //---- Handling Schedule ----}}
 
-  Future<void> updateClassInfo(ClassItem updatedClass, int index) {
-    return Hive.box<ClassItem>(transactionsBoxKey).putAt(index, updatedClass);
-  }
-
-  void deleteClassItem(ClassItem classItem) {
-    // Get a list of our transactions
-    final transactions = Hive.box<ClassItem>(transactionsBoxKey);
-    // Create a map out of it
-    final Map<dynamic, ClassItem> map = transactions.toMap();
-    dynamic desiredKey;
-    // For each key in the map, we check if the transaction is the same as the one we want to delete
-    map.forEach((key, value) {
-      if (value.className == classItem.className) desiredKey = key;
-    });
-
-    updateAvailablePeriodsAfterDelete(classItem.periodCodes);
-    updateMatrixAfterDelete(classItem.periodCodes);
-    // If we found the key, we delete it
-    transactions.delete(desiredKey);
-  }
 }

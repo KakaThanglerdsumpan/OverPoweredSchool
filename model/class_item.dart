@@ -21,6 +21,8 @@ class ClassItem {
   String credit;
   @HiveField(7)
   String grade;
+  @HiveField(8)
+  int itemKey;
   ClassItem(
       {required this.className,
       required this.periods,
@@ -30,5 +32,6 @@ class ClassItem {
       this.courseType = '0',
       this.credit = '0',
       this.grade = '0',
+      this.itemKey = 0,
       Key? key});
 }
